@@ -2,14 +2,10 @@
 
 read -d '' USAGE <<- EOF
 nrfprog.sh
-
 This is a loose shell port of the nrfjprog.exe program distributed by Nordic,
 which relies on JLinkExe to interface with the JLink hardware.
-
 usage:
-
 nrfjprog.sh <action> [action paramters]
-
 where action is one of
   --info
   --reset
@@ -19,7 +15,6 @@ where action is one of
   --flash-softdevice    <hexfile>
   --rtt
   --gdbserver
-
 EOF
 
 GREEN="\033[32m"
@@ -45,7 +40,7 @@ GDB_PORT=2331
 
 
 
-function msg {
+msg() {
     echo ""
     echo -e "${STATUS_COLOR}${1}${RESET}"
     echo ""
@@ -53,7 +48,7 @@ function msg {
 
 
 # As long as there is at least one more argument, keep looping
-while [[ $# -gt 0 ]]; do
+while [ $# -gt 0 ]; do
     key="$1"
     case "$key" in
         -f|--family)
@@ -140,7 +135,7 @@ echo "device $DEVICE" >> $TMPSCRIPT
 echo "if $IF" >> $TMPSCRIPT
 echo "speed $SPEED" >> $TMPSCRIPT
 
-function runscript {
+runscript() {
     $JLINK < $TMPSCRIPT
     rm $TMPSCRIPT
 }
@@ -205,7 +200,7 @@ elif [ "$CMD" = "rtt" ]; then
     # trap the SIGINT signal so we can clean up if the user CTRL-C's out of the
     # RTT client
     trap ctrl_c INT
-    function ctrl_c() {
+    ctrl_c() {
         return
     }
     echo -e "${STATUS_COLOR}Starting RTT Server...${RESET}"
