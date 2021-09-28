@@ -24,7 +24,7 @@ REPEAT ?= 1
 # HOME_TESTBED_INT_PORT:=
 # HOME_TESTBED_EXT_PORT:=
 # HOME_TESTBED_USER:=
-include testbeds_credentials.env
+# include testbeds_credentials.env
 
 GCC_INSTALL_ROOT	:= ~/opt/gnu-mcu-eclipse/arm-none-eabi-gcc/7.2.1-1.1-20180401-0515
 GCC_VERSION			:= 7.2.1
