@@ -73,7 +73,8 @@ static uint32_t my_id = 0;
 PROCESS(tx_process, "TX process");
 AUTOSTART_PROCESSES(&tx_process);
 /*---------------------------------------------------------------------------*/
-static int get_testbed_index(uint32_t my_id, const uint32_t *testbed_ids, uint8_t testbed_size){
+static int get_testbed_index(uint32_t my_id, const uint32_t *testbed_ids, uint8_t testbed_size)
+{
   int i;
   for( i=0; i<testbed_size; i++ ){
     if( my_id == testbed_ids[i] ){
@@ -83,7 +84,8 @@ static int get_testbed_index(uint32_t my_id, const uint32_t *testbed_ids, uint8_
   return -1;
 }
 /*---------------------------------------------------------------------------*/
-static void init_ibeacon_packet(ble_beacon_t *pkt, const uint8_t* uuid, uint16_t round, uint16_t slot){
+static void init_ibeacon_packet(ble_beacon_t *pkt, const uint8_t* uuid, uint16_t round, uint16_t slot)
+{
 #if (RADIO_MODE_CONF == RADIO_MODE_MODE_Ieee802154_250Kbit)
     pkt->radio_len = sizeof(ble_beacon_t) - 1; /* execlude len field */
 #else
@@ -466,6 +468,7 @@ PROCESS_THREAD(tx_process, ev, data)
             last_crc_is_ok = decode_ble_packet(my_rx_buffer, encode_decode_buffer) == 0;
             #endif
 
+            /*PRINTF("recieved packet UUID: %x%x%x%x-%x%x-%x%x-%x%x-%x%x%x%x%x%x",rx_pkt->uuid[0],rx_pkt->uuid[1],rx_pkt->uuid[2],rx_pkt->uuid[3],rx_pkt->uuid[4],rx_pkt->uuid[5],rx_pkt->uuid[6],rx_pkt->uuid[7],rx_pkt->uuid[8],rx_pkt->uuid[9],rx_pkt->uuid[10],rx_pkt->uuid[11],rx_pkt->uuid[12],rx_pkt->uuid[13],rx_pkt->uuid[14],rx_pkt->uuid[15]);*/
             /* check if it is our beacon packet */
             last_rx_ok = last_crc_is_ok ? (( rx_pkt->adv_address_low == MY_ADV_ADDRESS_LOW ) && ( rx_pkt->adv_address_hi == MY_ADV_ADDRESS_HI )) : 0;
             // last_rx_ok = last_crc_is_ok; //XXX!
