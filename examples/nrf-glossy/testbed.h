@@ -38,8 +38,8 @@
 //#define TESTBED_PI_IDS (uint8_t[]){4,5,6,7,8,10,20,21,22,28}
 //#define TESTBED_IDS (uint32_t[]){0xbcf4b123, 0x4c7a76aeUL, 0x3f55b1ca, 0x5cfdb15UL, 0x1204d131UL, 0xb9514f78UL, 0xe158ae56UL, 0x4568e2a6UL, 0x8d5a02cUL}
 //#define TESTBED_PI_IDS (uint8_t[]){1,2,3,10,12,16,17,19,20}
-#define TESTBED_IDS (uint32_t[]){0xbcf4b123}
-#define TESTBED_PI_IDS (uint8_t[]){1}
+#define TESTBED_IDS (uint32_t[]){0xbcf4b123,0xed9062cf}
+#define TESTBED_PI_IDS (uint8_t[]){1,2}
 #define TESTBED_SIZE sizeof(TESTBED_PI_IDS)
 
 #elif TESTBED==IOTLAB_SACLAY
