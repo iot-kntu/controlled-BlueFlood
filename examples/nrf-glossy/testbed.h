@@ -176,8 +176,8 @@ mote20,mote21,mote22,mote24\
 #define MY_ADV_ADDRESS_HI 0xA1A1U
 
 //does not really matter... Thoe goal of this mode is to extract the mote IDs to put in your testbed configuration
-#define TESTBED_IDS (uint32_t[]){0x724d2a67UL}
-#define TESTBED_PI_IDS (uint8_t[]){20}
+#define TESTBED_IDS (uint32_t[]){0xbcf4b123,0xed9062cf}
+#define TESTBED_PI_IDS (uint8_t[]){1,2}
 #define TESTBED_SIZE sizeof(TESTBED_PI_IDS)
 
 #else
