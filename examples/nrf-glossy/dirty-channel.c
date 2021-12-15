@@ -250,6 +250,7 @@ PROCESS_THREAD(tx_process, ev, data)
 
   // #if ROUND_ROBIN_INITIATOR
   initiator_node_index = INITATOR_NODE_INDEX;
+  PRINTF("initiator node index: %d",initiator_node_index);
   // #endif
 
   while(1)
