@@ -47,12 +47,12 @@ const uint8_t uuids_array[UUID_LIST_LENGTH][16] = UUID_ARRAY;
 const uint32_t testbed_ids[] = TESTBED_IDS;
 enum {MSG_TURN_BROADCAST=0xff, MSG_TURN_NONE=0xfe};
 /*---------------------------------------------------------------------------*/
-// #if ROUND_ROBIN_INITIATOR
+#if ROUND_ROBIN_INITIATOR
 volatile uint8_t initiator_node_index = INITATOR_NODE_INDEX;
 #define tx_node_id        (TESTBED_IDS[initiator_node_index])
-// #else
-// #define tx_node_id        (TESTBED_IDS[INITATOR_NODE_INDEX])
-// #endif /* ROUND_ROBIN_INITIATOR */
+#else
+#define tx_node_id        (TESTBED_IDS[INITATOR_NODE_INDEX])
+#endif /* ROUND_ROBIN_INITIATOR */
 #define IS_INITIATOR() (my_id == tx_node_id)
 /*---------------------------------------------------------------------------*/
 #if PRINT_CUSTOM_DEBUG_MSG
@@ -248,10 +248,10 @@ PROCESS_THREAD(tx_process, ev, data)
   // roundtimer_scheduled = false;
   // #endif
 
-  // #if ROUND_ROBIN_INITIATOR
+  #if ROUND_ROBIN_INITIATOR
   initiator_node_index = INITATOR_NODE_INDEX;
   PRINTF("initiator node index: %d",initiator_node_index);
-  // #endif
+  #endif
 
   while(1)
   {
@@ -270,26 +270,26 @@ PROCESS_THREAD(tx_process, ev, data)
     #define ROUND_LEN_RULE (((!IS_INITIATOR()) && synced && (slot < sync_slot + ROUND_LEN)) || ((IS_INITIATOR() || !synced) && (slot < ROUND_RX_LEN)) )
     #endif /* TESTBED==WIRED_TESTBED */
 
-    // #if ROUND_ROBIN_INITIATOR
+    #if ROUND_ROBIN_INITIATOR
     if(joined){
       initiator_node_index = round % TESTBED_SIZE;
     } else {
       initiator_node_index = INITATOR_NODE_INDEX;
     } 
-    // #endif /* ROUND_ROBIN_INITIATOR */
+    #endif /* ROUND_ROBIN_INITIATOR */
     // nrf_gpio_cfg_output(ROUND_INDICATOR_PIN);
     nrf_gpio_pin_toggle(ROUND_INDICATOR_PIN);
     for(slot = 0; ROUND_LEN_RULE; slot++){
       logslot = slot + 1;
       tt = t_start_round + slot * SLOT_LEN;
       // BUSYWAIT_UNTIL(1, tt - guard_time);
-      // #if ROUND_ROBIN_INITIATOR
+      #if ROUND_ROBIN_INITIATOR
       do_tx = ( IS_INITIATOR() && (joined || (slot % 2 == 0))) || (!IS_INITIATOR() && synced && my_turn);
-      // #else
-      // do_tx = (IS_INITIATOR() && !synced && (slot % 2 == 0)) || (!IS_INITIATOR() && synced && (slot > 0) && my_turn);
+      #else
+      do_tx = (IS_INITIATOR() && !synced && (slot % 2 == 0)) || (!IS_INITIATOR() && synced && (slot > 0) && my_turn);
       // do_tx = (IS_INITIATOR() && (slot < 4) && (slot % 2 == 0)) || (!IS_INITIATOR() && synced && my_turn && (slot % 2 != 0));
       // do_tx = (IS_INITIATOR()) || (!IS_INITIATOR() && synced && my_turn);
-      // #endif /* ROUND_ROBIN_INITIATOR */
+      #endif /* ROUND_ROBIN_INITIATOR */
       
       //do_tx = my_id == tx_node_id;
       do_rx = !do_tx;
