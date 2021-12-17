@@ -12,8 +12,6 @@
 #define TABLE_TESTBED 8
 #define CTH_TESTBED 9
 
-//minimal hello_world for extracting node IDs
-#define TEST_HELLO_WORLD (TESTBED==HELLOWORLD_TESTBED)
 //test CT with two nodes, where each node sends alone for 10 rounds to measure individual links
 #define TWO_NODES_EXPERIMENT (TESTBED==WIRED_TESTBED)
 
@@ -32,7 +30,11 @@
 #define INITATOR_NODE_INDEX 0 
 #endif
 
-#if TESTBED==HOME_TESTBED
+#if TESTBED==HELLOWORLD_TESTBED
+//minimal hello_world for extracting node IDs
+#define TEST_HELLO_WORLD
+
+#elif TESTBED==HOME_TESTBED
 #define TESTBED_DIAMETER (2)
 //#define TESTBED_IDS (uint32_t[]){0x7b150560UL, 0xddf8a17fUL, 0x8e28b37dUL, 0x1c30a5f9UL, 0x70f96a53UL, 0x5cfdb15UL, 0x724d2a67UL, 0x7475364dUL, 0x74231ca7UL, 0x2fa5d86eUL}
 //#define TESTBED_PI_IDS (uint8_t[]){4,5,6,7,8,10,20,21,22,28}
