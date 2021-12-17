@@ -255,6 +255,9 @@ PROCESS_THREAD(tx_process, ev, data)
 
   while(1)
   {
+    #if ROUND_ROBIN_INITIATOR
+    PRINTF("initiator node index: %d",initiator_node_index);
+    #endif
     rx_ok = 0, rx_crc_failed = 0, rx_none = 0; tx_done=0; berr = 0; berr_per_pkt_max = 0, berr_per_byte_max = 0; corrupt_msg_index = 0;
     #if PRINT_TX_STATUS
     tx_status[0] = ':';
