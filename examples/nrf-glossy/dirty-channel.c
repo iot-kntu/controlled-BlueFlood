@@ -277,7 +277,7 @@ PROCESS_THREAD(tx_process, ev, data)
       initiator_node_index = INITATOR_NODE_INDEX;
     } 
     #endif /* ROUND_ROBIN_INITIATOR */
-    PRINTF("initiator node index: %d",initiator_node_index);
+    //SPRINTF("initiator node index: %d",initiator_node_index);
     // nrf_gpio_cfg_output(ROUND_INDICATOR_PIN);
     nrf_gpio_pin_toggle(ROUND_INDICATOR_PIN);
     for(slot = 0; ROUND_LEN_RULE; slot++){
