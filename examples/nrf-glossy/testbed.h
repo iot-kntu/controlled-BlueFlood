@@ -29,7 +29,7 @@
 #endif
 
 #ifndef INITATOR_NODE_INDEX
-#define INITATOR_NODE_INDEX 0 
+#define INITATOR_NODE_INDEX 1
 #endif
 
 #if TESTBED==HOME_TESTBED
