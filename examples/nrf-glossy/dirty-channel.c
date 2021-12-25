@@ -249,7 +249,7 @@ PROCESS_THREAD(tx_process, ev, data)
   // #endif
 
   #ifdef ROUND_ROBIN_INITIATOR
-  initiator_node_index = INITATOR_NODE_INDEX;
+  initiator_node_index = 1;
   #endif
 
   while(1)
