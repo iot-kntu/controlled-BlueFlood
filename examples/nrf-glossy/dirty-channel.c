@@ -250,7 +250,6 @@ PROCESS_THREAD(tx_process, ev, data)
 
   #ifdef ROUND_ROBIN_INITIATOR
   initiator_node_index = INITATOR_NODE_INDEX;
-  PRINTF("initiator node index: %d \n",initiator_node_index);
   #endif
 
   while(1)
@@ -276,7 +275,8 @@ PROCESS_THREAD(tx_process, ev, data)
     } else {
       initiator_node_index = INITATOR_NODE_INDEX;
     } 
-    PRINTF("initiator node index: %d",initiator_node_index);
+    PRINTF("joined: %d\n",joined);
+    PRINTF("initiator node index: %d\n",initiator_node_index);
     #endif /* ROUND_ROBIN_INITIATOR */
     
     // nrf_gpio_cfg_output(ROUND_INDICATOR_PIN);
