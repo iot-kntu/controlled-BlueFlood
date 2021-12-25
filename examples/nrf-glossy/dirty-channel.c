@@ -47,10 +47,7 @@ const uint8_t uuids_array[UUID_LIST_LENGTH][16] = UUID_ARRAY;
 const uint32_t testbed_ids[] = TESTBED_IDS;
 enum {MSG_TURN_BROADCAST=0xff, MSG_TURN_NONE=0xfe};
 /*---------------------------------------------------------------------------*/
-#ifndef INITATOR_NODE_INDEX
-#define INITATOR_NODE_INDEX = 1
-#endif
-
+INITATOR_NODE_INDEX = 1
 #ifdef ROUND_ROBIN_INITIATOR
 volatile uint8_t initiator_node_index = INITATOR_NODE_INDEX;
 #define tx_node_id        (TESTBED_IDS[initiator_node_index])
