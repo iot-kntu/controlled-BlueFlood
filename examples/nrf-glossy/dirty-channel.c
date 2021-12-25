@@ -191,7 +191,7 @@ PROCESS_THREAD(tx_process, ev, data)
   uint8_t last_rx_ok = 0;
   PROCESS_BEGIN();
   while(1){
-      PRINTF("%d\n",TESTBED_SIZE);
+      PRINTF("%d\n",initiator_node_index);
   }
   #if TEST_HELLO_WORLD
     my_radio_init(&my_id, my_tx_buffer);
