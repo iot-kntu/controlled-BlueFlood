@@ -47,11 +47,15 @@ const uint8_t uuids_array[UUID_LIST_LENGTH][16] = UUID_ARRAY;
 const uint32_t testbed_ids[] = TESTBED_IDS;
 enum {MSG_TURN_BROADCAST=0xff, MSG_TURN_NONE=0xfe};
 /*---------------------------------------------------------------------------*/
+#ifndef INITATOR_NODE_INDEX
+#define INITATOR_NODE_INDEX = 1
+#endif
+
 #ifdef ROUND_ROBIN_INITIATOR
-volatile uint8_t initiator_node_index = 1;
+volatile uint8_t initiator_node_index = INITATOR_NODE_INDEX;
 #define tx_node_id        (TESTBED_IDS[initiator_node_index])
 #else
-#define tx_node_id        (TESTBED_IDS[1])
+#define tx_node_id        (TESTBED_IDS[INITATOR_NODE_INDEX])
 #endif /* ROUND_ROBIN_INITIATOR */
 #define IS_INITIATOR() (my_id == tx_node_id)
 /*---------------------------------------------------------------------------*/
@@ -186,7 +190,9 @@ PROCESS_THREAD(tx_process, ev, data)
   int i;
   uint8_t last_rx_ok = 0;
   PROCESS_BEGIN();
-
+  while(1){
+      PRINTF("%d\n",TESTBED_SIZE);
+  }
   #if TEST_HELLO_WORLD
     my_radio_init(&my_id, my_tx_buffer);
     my_index = get_testbed_index(my_id, testbed_ids, TESTBED_SIZE);
@@ -249,7 +255,7 @@ PROCESS_THREAD(tx_process, ev, data)
   // #endif
 
   #ifdef ROUND_ROBIN_INITIATOR
-  initiator_node_index = 1;
+  initiator_node_index = INITATOR_NODE_INDEX;
   #endif
 
   while(1)
@@ -273,7 +279,7 @@ PROCESS_THREAD(tx_process, ev, data)
     if(joined){
       initiator_node_index = round % TESTBED_SIZE;
     } else {
-      initiator_node_index = 1;
+      initiator_node_index = INITATOR_NODE_INDEX;
     } 
     PRINTF("joined: %d\n",joined);
     PRINTF("initiator node index: %d\n",initiator_node_index);
