@@ -28,7 +28,7 @@
 #define ROUND_ROBIN_INITIATOR 1
 #endif
 
-#ifndef INITATOR_NODE_INDEX
+#if INITATOR_NODE_INDEX == 0
 #define INITATOR_NODE_INDEX 1
 #endif
 
