@@ -51,7 +51,7 @@ enum {MSG_TURN_BROADCAST=0xff, MSG_TURN_NONE=0xfe};
 volatile uint8_t initiator_node_index = 1;
 #define tx_node_id        (TESTBED_IDS[initiator_node_index])
 #else
-#define tx_node_id        (TESTBED_IDS[INITATOR_NODE_INDEX])
+#define tx_node_id        (TESTBED_IDS[1])
 #endif /* ROUND_ROBIN_INITIATOR */
 #define IS_INITIATOR() (my_id == tx_node_id)
 /*---------------------------------------------------------------------------*/
@@ -273,7 +273,7 @@ PROCESS_THREAD(tx_process, ev, data)
     if(joined){
       initiator_node_index = round % TESTBED_SIZE;
     } else {
-      initiator_node_index = INITATOR_NODE_INDEX;
+      initiator_node_index = 1;
     } 
     PRINTF("joined: %d\n",joined);
     PRINTF("initiator node index: %d\n",initiator_node_index);
