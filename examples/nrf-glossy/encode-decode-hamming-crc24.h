@@ -2,7 +2,7 @@
 #define ENCODE_DECODE_HAMMING_CRC24_H
 
 #include "ble-beacon-header.h"
-#define USE_HAMMING_CODE 0
+#define USE_HAMMING_CODE 1
 
 #if USE_HAMMING_CODE
 uint32_t crc24_calc(uint8_t *cp, unsigned int len);

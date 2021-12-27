@@ -61,7 +61,7 @@ static char dbgmsg[256]="", dbgmsg2[256]="";
 #endif
 static uint8_t my_tx_buffer[255] = {0};
 static uint8_t my_rx_buffer[255] = {0};
-#ifdef USE_HAMMING_CODE
+#if USE_HAMMING_CODE
 static uint8_t encode_decode_buffer[255] = {0};
 #endif 
 static ble_beacon_t msg;
@@ -341,7 +341,7 @@ PROCESS_THREAD(tx_process, ev, data)
         //msg.uuid[0] = (round % 2) ? &uuids_array[round%UUID_LIST_LENGTH][0] : my_id >> 24UL;
         #endif
         uint8_t *tx_msg = (uint8_t *)&msg;
-        #ifdef USE_HAMMING_CODE
+        #if USE_HAMMING_CODE
         tx_msg = encode_decode_buffer;
         encode_ble_packet(&msg, tx_msg);
         #endif
@@ -453,7 +453,7 @@ PROCESS_THREAD(tx_process, ev, data)
 
             got_end_event = NRF_RADIO->EVENTS_END;
             last_rx_ok = got_payload_event = got_end_event;
-            last_crc_is_ok = /*USE_HAMMING_CODE ||*/ ((got_end_event != 0U) && (NRF_RADIO->CRCSTATUS & RADIO_CRCSTATUS_CRCSTATUS_CRCOk));
+            last_crc_is_ok = USE_HAMMING_CODE || ((got_end_event != 0U) && (NRF_RADIO->CRCSTATUS & RADIO_CRCSTATUS_CRCSTATUS_CRCOk));
             // last_crc_is_ok = 1; //XXX
             #else
             BUSYWAIT_UNTIL_ABS(NRF_RADIO->EVENTS_PAYLOAD != 0U, get_rx_ts() + PAYLOAD_AIR_TIME_MIN);
@@ -462,7 +462,7 @@ PROCESS_THREAD(tx_process, ev, data)
             if(got_payload_event){
               BUSYWAIT_UNTIL_ABS(NRF_RADIO->EVENTS_END != 0U, get_rx_ts() + PAYLOAD_AIR_TIME_MIN + CRC_AIR_T + SLOT_PROCESSING_TIME_PKT_END);
               got_end_event = NRF_RADIO->EVENTS_END;
-              last_crc_is_ok = /*USE_HAMMING_CODE ||*/ ((got_end_event != 0U) && (NRF_RADIO->CRCSTATUS & RADIO_CRCSTATUS_CRCSTATUS_CRCOk));
+              last_crc_is_ok = USE_HAMMING_CODE || ((got_end_event != 0U) && (NRF_RADIO->CRCSTATUS & RADIO_CRCSTATUS_CRCSTATUS_CRCOk));
             }
             #endif /* (RADIO_MODE_CONF == RADIO_MODE_MODE_Ieee802154_250Kbit) */
           }
@@ -470,7 +470,7 @@ PROCESS_THREAD(tx_process, ev, data)
           /* check if it is a valid packet: a. our uuid and b. CRC ok */
           if(last_rx_ok && last_crc_is_ok){
             ble_beacon_t *rx_pkt = (ble_beacon_t *) my_rx_buffer;
-            #ifdef USE_HAMMING_CODE
+            #if USE_HAMMING_CODE
             rx_pkt = (ble_beacon_t *) encode_decode_buffer;
             last_crc_is_ok = decode_ble_packet(my_rx_buffer, encode_decode_buffer) == 0;
             #endif
@@ -536,7 +536,7 @@ PROCESS_THREAD(tx_process, ev, data)
         #endif /* PRINT_TX_STATUS */
 
         rx_ok += last_rx_ok && last_crc_is_ok;
-        if(CRC_LEN > 0 /*|| USE_HAMMING_CODE*/){
+        if(CRC_LEN > 0 || USE_HAMMING_CODE){
           rx_crc_failed += got_address_event && !last_crc_is_ok;
         } else {
           rx_crc_failed += memcmp(&my_rx_buffer, &msg, msg.radio_len - 5) != 0;
