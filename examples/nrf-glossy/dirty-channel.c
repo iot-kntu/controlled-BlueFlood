@@ -421,6 +421,8 @@ PROCESS_THREAD(tx_process, ev, data)
             rx_toffset = slot * SLOT_LEN + FIRST_SLOT_OFFSET - ADDRESS_EVENT_T_TX_OFFSET - guard_time;
             rx_missed_slot = check_timer_miss(rx_tref, rx_toffset, rx_tn);
             // nrf_gpio_pin_toggle(ROUND_INDICATOR_PIN);
+            PRINTF("rx_missed_slot:%d\n",rx_missed_slot);
+
             if(!rx_missed_slot){
               // t_proc = RTIMER_NOW();
               schedule_rx_abs(my_rx_buffer, GET_CHANNEL(round, slot), rx_target_time);
@@ -444,7 +446,7 @@ PROCESS_THREAD(tx_process, ev, data)
               #endif
             }
           }
-          PRINTF("got_address_event:%d\n",got_address_event);
+          //PRINTF("got_address_event:%d\n",got_address_event);
 
           if(got_address_event) {
             #if (RADIO_MODE_CONF == RADIO_MODE_MODE_Ieee802154_250Kbit)
