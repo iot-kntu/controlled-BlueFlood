@@ -378,7 +378,7 @@ PROCESS_THREAD(tx_process, ev, data)
         rx_rssi[logslot] = get_radio_rssi();
         #endif
       } else if(do_rx){
-        PRINTF("I only receive flooding.\n");
+        PRINTF("I only receive flooding. synced:%d my_turn:%d\n",synced,my_turn);
         static int join_trial = 0;
         uint8_t got_payload_event, got_address_event, got_end_event, slot_started;
         do{
