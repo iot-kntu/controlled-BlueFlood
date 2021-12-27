@@ -152,7 +152,7 @@ mote20,mote21,mote22,mote24\
 
 #elif TESTBED==WIRED_TESTBED
 
-#define MY_ADV_ADDRESS_HI 0xA1A1U
+//#define MY_ADV_ADDRESS_HI 0xA1A1U
 
 #define mote4  (0x7b150560UL)
 #define mote5  (0xddf8a17fUL)
