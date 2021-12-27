@@ -187,7 +187,7 @@ PROCESS_THREAD(tx_process, ev, data)
   int i;
   uint8_t last_rx_ok = 0;
   PROCESS_BEGIN();
-  #if USE_HAMMING_CODE
+  #ifdef USE_HAMMING_CODE
     while(1){
       PRINTF("use hamming\n");
     }
