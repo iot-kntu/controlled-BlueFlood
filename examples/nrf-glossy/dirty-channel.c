@@ -477,7 +477,7 @@ PROCESS_THREAD(tx_process, ev, data)
             /* check if it is our beacon packet */
             last_rx_ok = last_crc_is_ok ? (( rx_pkt->adv_address_low == MY_ADV_ADDRESS_LOW ) && ( rx_pkt->adv_address_hi == MY_ADV_ADDRESS_HI )) : 0;
             // last_rx_ok = last_crc_is_ok; //XXX!
-
+            PRINTF("last_crc:%d second:%d third:%d",last_crc_is_ok,( rx_pkt->adv_address_low == MY_ADV_ADDRESS_LOW ),( rx_pkt->adv_address_hi == MY_ADV_ADDRESS_HI ));
             if(last_rx_ok){
               memcpy(&msg, &my_rx_buffer, rx_pkt->radio_len + 1);
               if(!synced){
