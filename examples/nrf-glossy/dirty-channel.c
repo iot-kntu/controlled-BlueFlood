@@ -55,6 +55,7 @@ volatile uint8_t initiator_node_index = INITATOR_NODE_INDEX;
 #endif /* ROUND_ROBIN_INITIATOR */
 #define IS_INITIATOR() (my_id == tx_node_id)
 #define IS_SPECIFIC() (my_id == TESTBED_IDS[1])
+#define USE_HAMMING_CODE 1
 /*---------------------------------------------------------------------------*/
 #if PRINT_CUSTOM_DEBUG_MSG
 static char dbgmsg[256]="", dbgmsg2[256]="";
@@ -187,11 +188,11 @@ PROCESS_THREAD(tx_process, ev, data)
   int i;
   uint8_t last_rx_ok = 0;
   PROCESS_BEGIN();
-  #ifdef USE_HAMMING_CODE
+  #if USE_HAMMING_CODE
     while(1){
-      PRINTF("use hamming\n");
+      PRINTF("use hamming")
     }
-  #endif 
+  #endif
   #if TEST_HELLO_WORLD
     my_radio_init(&my_id, my_tx_buffer);
     my_index = get_testbed_index(my_id, testbed_ids, TESTBED_SIZE);
