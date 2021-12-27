@@ -54,7 +54,6 @@ volatile uint8_t initiator_node_index = INITATOR_NODE_INDEX;
 #define tx_node_id        (TESTBED_IDS[INITATOR_NODE_INDEX])
 #endif /* ROUND_ROBIN_INITIATOR */
 #define IS_INITIATOR() (my_id == tx_node_id)
-#define IS_SPECIFIC() (my_id == TESTBED_IDS[1])
 /*---------------------------------------------------------------------------*/
 #if PRINT_CUSTOM_DEBUG_MSG
 static char dbgmsg[256]="", dbgmsg2[256]="";
@@ -187,6 +186,7 @@ PROCESS_THREAD(tx_process, ev, data)
   int i;
   uint8_t last_rx_ok = 0;
   PROCESS_BEGIN();
+
   #if TEST_HELLO_WORLD
     my_radio_init(&my_id, my_tx_buffer);
     my_index = get_testbed_index(my_id, testbed_ids, TESTBED_SIZE);
@@ -275,10 +275,7 @@ PROCESS_THREAD(tx_process, ev, data)
     } else {
       initiator_node_index = INITATOR_NODE_INDEX;
     } 
-    PRINTF("joined: %d\n",joined);
-    PRINTF("initiator node index: %d\n",initiator_node_index);
     #endif /* ROUND_ROBIN_INITIATOR */
-    
     // nrf_gpio_cfg_output(ROUND_INDICATOR_PIN);
     nrf_gpio_pin_toggle(ROUND_INDICATOR_PIN);
     for(slot = 0; ROUND_LEN_RULE; slot++){
@@ -296,7 +293,6 @@ PROCESS_THREAD(tx_process, ev, data)
       //do_tx = my_id == tx_node_id;
       do_rx = !do_tx;
       if(do_tx){
-        PRINTF("I'm flooding too !!!\n");
         msg.slot = slot;
         msg.round = round;
         joined = 1;
@@ -378,7 +374,6 @@ PROCESS_THREAD(tx_process, ev, data)
         rx_rssi[logslot] = get_radio_rssi();
         #endif
       } else if(do_rx){
-        PRINTF("I only receive flooding. synced:%d my_turn:%d\n",synced,my_turn);
         static int join_trial = 0;
         uint8_t got_payload_event, got_address_event, got_end_event, slot_started;
         do{
@@ -420,8 +415,6 @@ PROCESS_THREAD(tx_process, ev, data)
             rx_toffset = slot * SLOT_LEN + FIRST_SLOT_OFFSET - ADDRESS_EVENT_T_TX_OFFSET - guard_time;
             rx_missed_slot = check_timer_miss(rx_tref, rx_toffset, rx_tn);
             // nrf_gpio_pin_toggle(ROUND_INDICATOR_PIN);
-            PRINTF("rx_missed_slot:%d\n",rx_missed_slot);
-
             if(!rx_missed_slot){
               // t_proc = RTIMER_NOW();
               schedule_rx_abs(my_rx_buffer, GET_CHANNEL(round, slot), rx_target_time);
@@ -445,7 +438,6 @@ PROCESS_THREAD(tx_process, ev, data)
               #endif
             }
           }
-          //PRINTF("got_address_event:%d\n",got_address_event);
 
           if(got_address_event) {
             #if (RADIO_MODE_CONF == RADIO_MODE_MODE_Ieee802154_250Kbit)
@@ -468,7 +460,6 @@ PROCESS_THREAD(tx_process, ev, data)
             }
             #endif /* (RADIO_MODE_CONF == RADIO_MODE_MODE_Ieee802154_250Kbit) */
           }
-          //PRINTF("last_crc:%d last_rx:%d\n",last_crc_is_ok,last_rx_ok);
           /* check if it is a valid packet: a. our uuid and b. CRC ok */
           if(last_rx_ok && last_crc_is_ok){
             ble_beacon_t *rx_pkt = (ble_beacon_t *) my_rx_buffer;
@@ -477,10 +468,11 @@ PROCESS_THREAD(tx_process, ev, data)
             last_crc_is_ok = decode_ble_packet(my_rx_buffer, encode_decode_buffer) == 0;
             #endif
 
-            //PRINTF("recieved packet UUID: %x%x%x%x-%x%x-%x%x-%x%x-%x%x%x%x%x%x\n",rx_pkt->uuid[0],rx_pkt->uuid[1],rx_pkt->uuid[2],rx_pkt->uuid[3],rx_pkt->uuid[4],rx_pkt->uuid[5],rx_pkt->uuid[6],rx_pkt->uuid[7],rx_pkt->uuid[8],rx_pkt->uuid[9],rx_pkt->uuid[10],rx_pkt->uuid[11],rx_pkt->uuid[12],rx_pkt->uuid[13],rx_pkt->uuid[14],rx_pkt->uuid[15]);
+            /*PRINTF("recieved packet UUID: %x%x%x%x-%x%x-%x%x-%x%x-%x%x%x%x%x%x",rx_pkt->uuid[0],rx_pkt->uuid[1],rx_pkt->uuid[2],rx_pkt->uuid[3],rx_pkt->uuid[4],rx_pkt->uuid[5],rx_pkt->uuid[6],rx_pkt->uuid[7],rx_pkt->uuid[8],rx_pkt->uuid[9],rx_pkt->uuid[10],rx_pkt->uuid[11],rx_pkt->uuid[12],rx_pkt->uuid[13],rx_pkt->uuid[14],rx_pkt->uuid[15]);*/
             /* check if it is our beacon packet */
             last_rx_ok = last_crc_is_ok ? (( rx_pkt->adv_address_low == MY_ADV_ADDRESS_LOW ) && ( rx_pkt->adv_address_hi == MY_ADV_ADDRESS_HI )) : 0;
             // last_rx_ok = last_crc_is_ok; //XXX!
+
             if(last_rx_ok){
               memcpy(&msg, &my_rx_buffer, rx_pkt->radio_len + 1);
               if(!synced){
