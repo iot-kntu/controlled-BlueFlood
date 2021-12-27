@@ -187,7 +187,7 @@ PROCESS_THREAD(tx_process, ev, data)
   uint8_t last_rx_ok = 0;
   PROCESS_BEGIN();
   while(1){
-    PRINTF("tx_node_id:%d/n",tx_node_id);
+    PRINTF("tx_node_id:%lx\n",tx_node_id);
   }
   #if TEST_HELLO_WORLD
     my_radio_init(&my_id, my_tx_buffer);
