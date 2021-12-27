@@ -64,7 +64,7 @@ test_mode_tx_carrier?=0 #do not tx/rx data, but transmit a constant unmodulated 
 #unnecessary
 DURATION ?= 10 #duration of the experiment
 TESTBED_CONF?=WIRED_TESTBED #Default testbed 
-round_robin_initiator ?= 0 #switch initiator every round
+round_robin_initiator ?= 1 #switch initiator every round
 cpu_busywait ?= 0
 
 sleep_node_forever?=0
