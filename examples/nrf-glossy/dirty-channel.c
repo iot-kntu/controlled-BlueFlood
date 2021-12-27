@@ -288,7 +288,7 @@ PROCESS_THREAD(tx_process, ev, data)
       #if ROUND_ROBIN_INITIATOR
       do_tx = ( IS_INITIATOR() && (joined || (slot % 2 == 0))) || (!IS_INITIATOR() && synced && my_turn);
       #else
-      do_tx = (IS_INITIATOR() && !synced && (slot % 2 == 0)) || (!IS_INITIATOR() && synced && (slot > 0) && my_turn && !IS_SPECIFIC());
+      do_tx = (IS_INITIATOR() && !synced && (slot % 2 == 0)) || (!IS_INITIATOR() && synced && (slot > 0) && my_turn);
       // do_tx = (IS_INITIATOR() && (slot < 4) && (slot % 2 == 0)) || (!IS_INITIATOR() && synced && my_turn && (slot % 2 != 0));
       // do_tx = (IS_INITIATOR()) || (!IS_INITIATOR() && synced && my_turn);
       #endif /* ROUND_ROBIN_INITIATOR */
