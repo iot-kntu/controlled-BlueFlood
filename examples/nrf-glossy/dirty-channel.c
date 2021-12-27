@@ -187,7 +187,6 @@ PROCESS_THREAD(tx_process, ev, data)
   int i;
   uint8_t last_rx_ok = 0;
   PROCESS_BEGIN();
-
   #if TEST_HELLO_WORLD
     my_radio_init(&my_id, my_tx_buffer);
     my_index = get_testbed_index(my_id, testbed_ids, TESTBED_SIZE);
@@ -441,6 +440,7 @@ PROCESS_THREAD(tx_process, ev, data)
               }
             }  
             if(rx_missed_slot || !slot_started) {
+              PRINTF(dbgmsg, "t %" PRIu32 " %" PRIu32 " n %" PRIu32 " p %" PRIu32 " m %d %d", (t_start_round), rx_target_time, rx_tn, t_proc, rx_missed_slot, slot_started );
               #if PRINT_CUSTOM_DEBUG_MSG
               SPRINTF(dbgmsg, "t %" PRIu32 " %" PRIu32 " n %" PRIu32 " p %" PRIu32 " m %d %d", (t_start_round), rx_target_time, rx_tn, t_proc, rx_missed_slot, slot_started );
               #endif
