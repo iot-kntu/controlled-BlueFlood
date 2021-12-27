@@ -296,6 +296,7 @@ PROCESS_THREAD(tx_process, ev, data)
       //do_tx = my_id == tx_node_id;
       do_rx = !do_tx;
       if(do_tx){
+        PRINTF("I'm flooding too !!!\n");
         msg.slot = slot;
         msg.round = round;
         joined = 1;
@@ -377,6 +378,7 @@ PROCESS_THREAD(tx_process, ev, data)
         rx_rssi[logslot] = get_radio_rssi();
         #endif
       } else if(do_rx){
+        PRINTF("I only receive flooding.\n");
         static int join_trial = 0;
         uint8_t got_payload_event, got_address_event, got_end_event, slot_started;
         do{
