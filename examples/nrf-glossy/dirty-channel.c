@@ -54,7 +54,7 @@ volatile uint8_t initiator_node_index = INITATOR_NODE_INDEX;
 #define tx_node_id        (TESTBED_IDS[INITATOR_NODE_INDEX])
 #endif /* ROUND_ROBIN_INITIATOR */
 #define IS_INITIATOR() (my_id == tx_node_id)
-#define IS_SPECIFIC() (my_id == TESTBED_IDS[0])
+#define IS_SPECIFIC() (my_id == TESTBED_IDS[1])
 /*---------------------------------------------------------------------------*/
 #if PRINT_CUSTOM_DEBUG_MSG
 static char dbgmsg[256]="", dbgmsg2[256]="";
@@ -288,7 +288,7 @@ PROCESS_THREAD(tx_process, ev, data)
       #if ROUND_ROBIN_INITIATOR
       do_tx = ( IS_INITIATOR() && (joined || (slot % 2 == 0))) || (!IS_INITIATOR() && synced && my_turn);
       #else
-      do_tx = (IS_INITIATOR() && !synced && (slot % 2 == 0) && !IS_SPECIFIC()) || (!IS_INITIATOR() && synced && (slot > 0) && my_turn && !IS_SPECIFIC());
+      do_tx = (IS_INITIATOR() && !synced && (slot % 2 == 0)) || (!IS_INITIATOR() && synced && (slot > 0) && my_turn && !IS_SPECIFIC());
       // do_tx = (IS_INITIATOR() && (slot < 4) && (slot % 2 == 0)) || (!IS_INITIATOR() && synced && my_turn && (slot % 2 != 0));
       // do_tx = (IS_INITIATOR()) || (!IS_INITIATOR() && synced && my_turn);
       #endif /* ROUND_ROBIN_INITIATOR */
