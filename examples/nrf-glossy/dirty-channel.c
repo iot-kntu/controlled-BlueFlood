@@ -61,7 +61,7 @@ static char dbgmsg[256]="", dbgmsg2[256]="";
 #endif
 static uint8_t my_tx_buffer[255] = {0};
 static uint8_t my_rx_buffer[255] = {0};
-#if USE_HAMMING_CODE
+#ifdef USE_HAMMING_CODE
 static uint8_t encode_decode_buffer[255] = {0};
 #endif 
 static ble_beacon_t msg;
