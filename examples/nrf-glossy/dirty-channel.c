@@ -465,7 +465,7 @@ PROCESS_THREAD(tx_process, ev, data)
             }
             #endif /* (RADIO_MODE_CONF == RADIO_MODE_MODE_Ieee802154_250Kbit) */
           }
-          PRINTF("last_crc:%d last_rx:%d",last_crc_is_ok,last_rx_ok);
+          PRINTF("last_crc:%d last_rx:%d\n",last_crc_is_ok,last_rx_ok);
           /* check if it is a valid packet: a. our uuid and b. CRC ok */
           if(last_rx_ok && last_crc_is_ok){
             ble_beacon_t *rx_pkt = (ble_beacon_t *) my_rx_buffer;
