@@ -54,7 +54,6 @@ volatile uint8_t initiator_node_index = INITATOR_NODE_INDEX;
 #define tx_node_id        (TESTBED_IDS[INITATOR_NODE_INDEX])
 #endif /* ROUND_ROBIN_INITIATOR */
 #define IS_INITIATOR() (my_id == tx_node_id)
-#define IS_SPECIFIC() (my_id == TESTBED_IDS[1])
 /*---------------------------------------------------------------------------*/
 #if PRINT_CUSTOM_DEBUG_MSG
 static char dbgmsg[256]="", dbgmsg2[256]="";
@@ -286,7 +285,7 @@ PROCESS_THREAD(tx_process, ev, data)
       #if ROUND_ROBIN_INITIATOR
       do_tx = ( IS_INITIATOR() && (joined || (slot % 2 == 0))) || (!IS_INITIATOR() && synced && my_turn);
       #else
-      do_tx = (IS_INITIATOR() && !synced && (slot % 2 == 0)) || (!IS_INITIATOR() && synced && (slot > 0) && my_turn && !IS_SPECIFIC());
+      do_tx = (IS_INITIATOR() && !synced && (slot % 2 == 0)) || (!IS_INITIATOR() && synced && (slot > 0) && my_turn);
       // do_tx = (IS_INITIATOR() && (slot < 4) && (slot % 2 == 0)) || (!IS_INITIATOR() && synced && my_turn && (slot % 2 != 0));
       // do_tx = (IS_INITIATOR()) || (!IS_INITIATOR() && synced && my_turn);
       #endif /* ROUND_ROBIN_INITIATOR */
@@ -568,7 +567,7 @@ PROCESS_THREAD(tx_process, ev, data)
         }
       }
     }
-    PRINTF("recieved packet UUID: %x%x%x%x-%x%x-%x%x-%x%x-%x%x%x%x%x%x",last_rx_pkt->uuid[0],last_rx_pkt->uuid[1],last_rx_pkt->uuid[2],last_rx_pkt->uuid[3],last_rx_pkt->uuid[4],last_rx_pkt->uuid[5],last_rx_pkt->uuid[6],last_rx_pkt->uuid[7],last_rx_pkt->uuid[8],last_rx_pkt->uuid[9],last_rx_pkt->uuid[10],last_rx_pkt->uuid[11],last_rx_pkt->uuid[12],last_rx_pkt->uuid[13],last_rx_pkt->uuid[14],last_rx_pkt->uuid[15]);
+    PRINTF("recieved packet UUID: %x%x%x%x-%x%x-%x%x-%x%x-%x%x%x%x%x%x \n",last_rx_pkt->uuid[0],last_rx_pkt->uuid[1],last_rx_pkt->uuid[2],last_rx_pkt->uuid[3],last_rx_pkt->uuid[4],last_rx_pkt->uuid[5],last_rx_pkt->uuid[6],last_rx_pkt->uuid[7],last_rx_pkt->uuid[8],last_rx_pkt->uuid[9],last_rx_pkt->uuid[10],last_rx_pkt->uuid[11],last_rx_pkt->uuid[12],last_rx_pkt->uuid[13],last_rx_pkt->uuid[14],last_rx_pkt->uuid[15]);
     my_radio_off_completely();
     // nrf_gpio_cfg_output(ROUND_INDICATOR_PIN);
     nrf_gpio_pin_toggle(ROUND_INDICATOR_PIN);
