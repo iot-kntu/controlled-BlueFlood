@@ -97,8 +97,8 @@ static void init_ibeacon_packet(ble_beacon_t *pkt, const uint8_t* uuid, uint16_t
   pkt->adv_address_hi = MY_ADV_ADDRESS_HI;
   memcpy(pkt->uuid, uuid, sizeof(pkt->uuid));
   pkt->round = round;
-  pkt->minor = minor;
-  pkt->major = major;
+  //pkt->minor = minor;
+  //pkt->major = major;
   pkt->slot = slot;
   pkt->turn = MSG_TURN_NONE;
 
