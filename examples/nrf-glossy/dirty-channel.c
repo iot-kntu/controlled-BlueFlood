@@ -84,7 +84,7 @@ static int get_testbed_index(uint32_t my_id, const uint32_t *testbed_ids, uint8_
   return -1;
 }
 /*---------------------------------------------------------------------------*/
-static void init_ibeacon_packet(ble_beacon_t *pkt, const uint8_t* uuid, uint16_t round, uint16_t slot)
+static void init_ibeacon_packet(ble_beacon_t *pkt, const uint8_t* uuid, uint16_t round, uint16_t slot,uint16_t minor,uint16_t major)
 {
 #if (RADIO_MODE_CONF == RADIO_MODE_MODE_Ieee802154_250Kbit)
     pkt->radio_len = sizeof(ble_beacon_t) - 1; /* execlude len field */
@@ -103,6 +103,8 @@ static void init_ibeacon_packet(ble_beacon_t *pkt, const uint8_t* uuid, uint16_t
 
   #if (PACKET_IBEACON_FORMAT)
   pkt->ad_flags_length = 2; //2bytes flags
+  pkt->minor = minor;
+  pkt->major = major;
   pkt->ad_flags_type = 1; //1=flags
   pkt->ad_flags_data = 6; //(non-connectable, undirected advertising, single-mode device)
   pkt->ad_length = 0x1a; //26 bytes, the remainder of the packet
@@ -189,7 +191,7 @@ PROCESS_THREAD(tx_process, ev, data)
   #if TEST_HELLO_WORLD
     my_radio_init(&my_id, my_tx_buffer);
     my_index = get_testbed_index(my_id, testbed_ids, TESTBED_SIZE);
-    init_ibeacon_packet(&msg, &uuids_array[0][0], round, slot);
+    init_ibeacon_packet(&msg, &uuids_array[0][0], round, slot,my_id,my_id);
     //put radio in tx idle mode to send continuous carrier
     #if RADIO_TEST_TX_CARRIER
     my_radio_send(my_tx_buffer, BLE_DEFAULT_CHANNEL);
@@ -228,6 +230,7 @@ PROCESS_THREAD(tx_process, ev, data)
   my_radio_init(&my_id, my_tx_buffer);
   // leds_off(LEDS_ALL);
   my_index = get_testbed_index(my_id, testbed_ids, TESTBED_SIZE);
+  init_ibeacon_packet(&msg, &uuids_array[initiator_node_index][0], round, slot,my_id,my_id);
   watchdog_periodic();
 
   if(IS_INITIATOR()){
@@ -274,7 +277,7 @@ PROCESS_THREAD(tx_process, ev, data)
     } else {
       initiator_node_index = INITATOR_NODE_INDEX;
     } 
-    init_ibeacon_packet(&msg, &uuids_array[initiator_node_index][0], round, slot);
+    init_ibeacon_packet(&msg, &uuids_array[initiator_node_index][0], round, slot,my_id,my_id);
     #endif /* ROUND_ROBIN_INITIATOR */
     // nrf_gpio_cfg_output(ROUND_INDICATOR_PIN);
     nrf_gpio_pin_toggle(ROUND_INDICATOR_PIN);
@@ -567,8 +570,9 @@ PROCESS_THREAD(tx_process, ev, data)
         }
       }
     }
-    if(!IS_INITIATOR()){
+    if(!IS_INITIATOR()){    
     PRINTF("recieved packet UUID: %x%x%x%x-%x%x-%x%x-%x%x-%x%x%x%x%x%x \n",last_rx_pkt->uuid[0],last_rx_pkt->uuid[1],last_rx_pkt->uuid[2],last_rx_pkt->uuid[3],last_rx_pkt->uuid[4],last_rx_pkt->uuid[5],last_rx_pkt->uuid[6],last_rx_pkt->uuid[7],last_rx_pkt->uuid[8],last_rx_pkt->uuid[9],last_rx_pkt->uuid[10],last_rx_pkt->uuid[11],last_rx_pkt->uuid[12],last_rx_pkt->uuid[13],last_rx_pkt->uuid[14],last_rx_pkt->uuid[15]);
+    PRINTF("minor: %d, major: %d \n",last_rx_pkt->minor,last_rx_pkt->major);
     }
     my_radio_off_completely();
     // nrf_gpio_cfg_output(ROUND_INDICATOR_PIN);
@@ -706,7 +710,7 @@ PROCESS_THREAD(tx_process, ev, data)
     }
 
     round++;
-    init_ibeacon_packet(&msg, &uuids_array[0][0], round, slot);
+    init_ibeacon_packet(&msg, &uuids_array[0][0], round, slot,my_id,my_id);
     memset(my_rx_buffer, 0, msg.radio_len);
     //msg.round=round;
     rtimer_clock_t now, t_start_round_old;
