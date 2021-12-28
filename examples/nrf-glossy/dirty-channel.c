@@ -510,7 +510,6 @@ PROCESS_THREAD(tx_process, ev, data)
           }
         } while(!joined);
 
-        PRINTF("recieved packet UUID: %x%x%x%x-%x%x-%x%x-%x%x-%x%x%x%x%x%x",last_rx_pkt->uuid[0],last_rx_pkt->uuid[1],last_rx_pkt->uuid[2],last_rx_pkt->uuid[3],last_rx_pkt->uuid[4],last_rx_pkt->uuid[5],last_rx_pkt->uuid[6],last_rx_pkt->uuid[7],last_rx_pkt->uuid[8],last_rx_pkt->uuid[9],last_rx_pkt->uuid[10],last_rx_pkt->uuid[11],last_rx_pkt->uuid[12],last_rx_pkt->uuid[13],last_rx_pkt->uuid[14],last_rx_pkt->uuid[15]);
         #if PRINT_TX_STATUS
         if(last_rx_ok && last_crc_is_ok) {
           tx_status[logslot] = '-';
@@ -569,6 +568,7 @@ PROCESS_THREAD(tx_process, ev, data)
         }
       }
     }
+    PRINTF("recieved packet UUID: %x%x%x%x-%x%x-%x%x-%x%x-%x%x%x%x%x%x",last_rx_pkt->uuid[0],last_rx_pkt->uuid[1],last_rx_pkt->uuid[2],last_rx_pkt->uuid[3],last_rx_pkt->uuid[4],last_rx_pkt->uuid[5],last_rx_pkt->uuid[6],last_rx_pkt->uuid[7],last_rx_pkt->uuid[8],last_rx_pkt->uuid[9],last_rx_pkt->uuid[10],last_rx_pkt->uuid[11],last_rx_pkt->uuid[12],last_rx_pkt->uuid[13],last_rx_pkt->uuid[14],last_rx_pkt->uuid[15]);
     my_radio_off_completely();
     // nrf_gpio_cfg_output(ROUND_INDICATOR_PIN);
     nrf_gpio_pin_toggle(ROUND_INDICATOR_PIN);
