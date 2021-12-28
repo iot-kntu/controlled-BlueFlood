@@ -228,7 +228,6 @@ PROCESS_THREAD(tx_process, ev, data)
   my_radio_init(&my_id, my_tx_buffer);
   // leds_off(LEDS_ALL);
   my_index = get_testbed_index(my_id, testbed_ids, TESTBED_SIZE);
-  init_ibeacon_packet(&msg, &uuids_array[0][0], round, slot);
   watchdog_periodic();
 
   if(IS_INITIATOR()){
@@ -253,6 +252,7 @@ PROCESS_THREAD(tx_process, ev, data)
 
   while(1)
   {
+    init_ibeacon_packet(&msg, &uuids_array[0][initiator_node_index], round, slot);
     ble_beacon_t *last_rx_pkt;
     rx_ok = 0, rx_crc_failed = 0, rx_none = 0; tx_done=0; berr = 0; berr_per_pkt_max = 0, berr_per_byte_max = 0; corrupt_msg_index = 0;
     #if PRINT_TX_STATUS
