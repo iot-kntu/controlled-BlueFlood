@@ -97,15 +97,15 @@ static void init_ibeacon_packet(ble_beacon_t *pkt, const uint8_t* uuid, uint16_t
   pkt->adv_address_hi = MY_ADV_ADDRESS_HI;
   memcpy(pkt->uuid, uuid, sizeof(pkt->uuid));
   pkt->round = round;
-  //pkt->minor = minor;
-  //pkt->major = major;
+  pkt->minor = minor;
+  pkt->major = major;
   pkt->slot = slot;
   pkt->turn = MSG_TURN_NONE;
 
   #if (PACKET_IBEACON_FORMAT)
   pkt->ad_flags_length = 2; //2bytes flags
-  //pkt->minor = minor;
-  //pkt->major = major;
+  pkt->minor = minor;
+  pkt->major = major;
   pkt->ad_flags_type = 1; //1=flags
   pkt->ad_flags_data = 6; //(non-connectable, undirected advertising, single-mode device)
   pkt->ad_length = 0x1a; //26 bytes, the remainder of the packet
@@ -192,7 +192,7 @@ PROCESS_THREAD(tx_process, ev, data)
   #if TEST_HELLO_WORLD
     my_radio_init(&my_id, my_tx_buffer);
     my_index = get_testbed_index(my_id, testbed_ids, TESTBED_SIZE);
-    init_ibeacon_packet(&msg, &uuids_array[0][0], round, slot,my_index,my_index);
+    init_ibeacon_packet(&msg, &uuids_array[0][0], round, slot,initiator_node_index,initiator_node_index);
     //put radio in tx idle mode to send continuous carrier
     #if RADIO_TEST_TX_CARRIER
     my_radio_send(my_tx_buffer, BLE_DEFAULT_CHANNEL);
@@ -231,7 +231,7 @@ PROCESS_THREAD(tx_process, ev, data)
   my_radio_init(&my_id, my_tx_buffer);
   // leds_off(LEDS_ALL);
   my_index = get_testbed_index(my_id, testbed_ids, TESTBED_SIZE);
-  init_ibeacon_packet(&msg, &uuids_array[initiator_node_index][0], round, slot,my_index,my_index);
+  init_ibeacon_packet(&msg, &uuids_array[initiator_node_index][0], round, slot,initiator_node_index,initiator_node_index);
   watchdog_periodic();
 
   if(IS_INITIATOR()){
@@ -278,7 +278,7 @@ PROCESS_THREAD(tx_process, ev, data)
     } else {
       initiator_node_index = INITATOR_NODE_INDEX;
     } 
-    init_ibeacon_packet(&msg, &uuids_array[initiator_node_index][0], round, slot,my_index,my_index);
+    init_ibeacon_packet(&msg, &uuids_array[initiator_node_index][0], round, slot,initiator_node_index,initiator_node_index);
     #endif /* ROUND_ROBIN_INITIATOR */
     // nrf_gpio_cfg_output(ROUND_INDICATOR_PIN);
     nrf_gpio_pin_toggle(ROUND_INDICATOR_PIN);
@@ -467,7 +467,7 @@ PROCESS_THREAD(tx_process, ev, data)
           /* check if it is a valid packet: a. our uuid and b. CRC ok */
           if(last_rx_ok && last_crc_is_ok){
             ble_beacon_t *rx_pkt = (ble_beacon_t *) my_rx_buffer;
-            last_rx_pkt = rx_pkt;
+            last_rx_pkt = (ble_beacon_t *) my_rx_buffer;
             #if USE_HAMMING_CODE
             rx_pkt = (ble_beacon_t *) encode_decode_buffer;
             last_crc_is_ok = decode_ble_packet(my_rx_buffer, encode_decode_buffer) == 0;
@@ -711,7 +711,7 @@ PROCESS_THREAD(tx_process, ev, data)
     }
 
     round++;
-    init_ibeacon_packet(&msg, &uuids_array[0][0], round, slot,my_index,my_index);
+    init_ibeacon_packet(&msg, &uuids_array[initiator_node_index][0], round, slot,initiator_node_index,initiator_node_index);
     memset(my_rx_buffer, 0, msg.radio_len);
     //msg.round=round;
     rtimer_clock_t now, t_start_round_old;
