@@ -254,6 +254,7 @@ PROCESS_THREAD(tx_process, ev, data)
 
   while(1)
   {
+    ble_beacon_t *last_rx_pkt;
     rx_ok = 0, rx_crc_failed = 0, rx_none = 0; tx_done=0; berr = 0; berr_per_pkt_max = 0, berr_per_byte_max = 0; corrupt_msg_index = 0;
     #if PRINT_TX_STATUS
     tx_status[0] = ':';
@@ -463,12 +464,12 @@ PROCESS_THREAD(tx_process, ev, data)
           /* check if it is a valid packet: a. our uuid and b. CRC ok */
           if(last_rx_ok && last_crc_is_ok){
             ble_beacon_t *rx_pkt = (ble_beacon_t *) my_rx_buffer;
+            last_rx_pkt = rx_pkt;
             #if USE_HAMMING_CODE
             rx_pkt = (ble_beacon_t *) encode_decode_buffer;
             last_crc_is_ok = decode_ble_packet(my_rx_buffer, encode_decode_buffer) == 0;
             #endif
 
-            /*PRINTF("recieved packet UUID: %x%x%x%x-%x%x-%x%x-%x%x-%x%x%x%x%x%x",rx_pkt->uuid[0],rx_pkt->uuid[1],rx_pkt->uuid[2],rx_pkt->uuid[3],rx_pkt->uuid[4],rx_pkt->uuid[5],rx_pkt->uuid[6],rx_pkt->uuid[7],rx_pkt->uuid[8],rx_pkt->uuid[9],rx_pkt->uuid[10],rx_pkt->uuid[11],rx_pkt->uuid[12],rx_pkt->uuid[13],rx_pkt->uuid[14],rx_pkt->uuid[15]);*/
             /* check if it is our beacon packet */
             last_rx_ok = last_crc_is_ok ? (( rx_pkt->adv_address_low == MY_ADV_ADDRESS_LOW ) && ( rx_pkt->adv_address_hi == MY_ADV_ADDRESS_HI )) : 0;
             // last_rx_ok = last_crc_is_ok; //XXX!
@@ -509,6 +510,7 @@ PROCESS_THREAD(tx_process, ev, data)
           }
         } while(!joined);
 
+        PRINTF("recieved packet UUID: %x%x%x%x-%x%x-%x%x-%x%x-%x%x%x%x%x%x",last_rx_pkt->uuid[0],last_rx_pkt->uuid[1],last_rx_pkt->uuid[2],last_rx_pkt->uuid[3],last_rx_pkt->uuid[4],last_rx_pkt->uuid[5],last_rx_pkt->uuid[6],last_rx_pkt->uuid[7],last_rx_pkt->uuid[8],last_rx_pkt->uuid[9],last_rx_pkt->uuid[10],last_rx_pkt->uuid[11],last_rx_pkt->uuid[12],last_rx_pkt->uuid[13],last_rx_pkt->uuid[14],last_rx_pkt->uuid[15]);
         #if PRINT_TX_STATUS
         if(last_rx_ok && last_crc_is_ok) {
           tx_status[logslot] = '-';
