@@ -252,7 +252,6 @@ PROCESS_THREAD(tx_process, ev, data)
 
   while(1)
   {
-    init_ibeacon_packet(&msg, &uuids_array[0][initiator_node_index], round, slot);
     ble_beacon_t *last_rx_pkt;
     rx_ok = 0, rx_crc_failed = 0, rx_none = 0; tx_done=0; berr = 0; berr_per_pkt_max = 0, berr_per_byte_max = 0; corrupt_msg_index = 0;
     #if PRINT_TX_STATUS
@@ -275,6 +274,7 @@ PROCESS_THREAD(tx_process, ev, data)
     } else {
       initiator_node_index = INITATOR_NODE_INDEX;
     } 
+    init_ibeacon_packet(&msg, &uuids_array[initiator_node_index][0], round, slot);
     #endif /* ROUND_ROBIN_INITIATOR */
     // nrf_gpio_cfg_output(ROUND_INDICATOR_PIN);
     nrf_gpio_pin_toggle(ROUND_INDICATOR_PIN);
