@@ -96,10 +96,10 @@ static void init_ibeacon_packet(ble_beacon_t *pkt, const uint8_t* uuid, uint16_t
   pkt->adv_address_low = MY_ADV_ADDRESS_LOW;
   pkt->adv_address_hi = MY_ADV_ADDRESS_HI;
   memcpy(pkt->uuid, uuid, sizeof(pkt->uuid));
-  pkt->round = round;
+  //pkt->round = round;
   //pkt->minor = 0;
-  pkt->slot = slot;
-  pkt->turn = MSG_TURN_NONE;
+  //pkt->slot = slot;
+  //pkt->turn = MSG_TURN_NONE;
 
   #if (PACKET_IBEACON_FORMAT)
   pkt->ad_flags_length = 2; //2bytes flags
