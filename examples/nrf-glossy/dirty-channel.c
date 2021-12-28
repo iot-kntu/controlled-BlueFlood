@@ -468,7 +468,7 @@ PROCESS_THREAD(tx_process, ev, data)
             last_crc_is_ok = decode_ble_packet(my_rx_buffer, encode_decode_buffer) == 0;
             #endif
 
-            /*PRINTF("recieved packet UUID: %x%x%x%x-%x%x-%x%x-%x%x-%x%x%x%x%x%x",rx_pkt->uuid[0],rx_pkt->uuid[1],rx_pkt->uuid[2],rx_pkt->uuid[3],rx_pkt->uuid[4],rx_pkt->uuid[5],rx_pkt->uuid[6],rx_pkt->uuid[7],rx_pkt->uuid[8],rx_pkt->uuid[9],rx_pkt->uuid[10],rx_pkt->uuid[11],rx_pkt->uuid[12],rx_pkt->uuid[13],rx_pkt->uuid[14],rx_pkt->uuid[15]);*/
+            PRINTF("recieved packet UUID: %x%x%x%x-%x%x-%x%x-%x%x-%x%x%x%x%x%x",rx_pkt->uuid[0],rx_pkt->uuid[1],rx_pkt->uuid[2],rx_pkt->uuid[3],rx_pkt->uuid[4],rx_pkt->uuid[5],rx_pkt->uuid[6],rx_pkt->uuid[7],rx_pkt->uuid[8],rx_pkt->uuid[9],rx_pkt->uuid[10],rx_pkt->uuid[11],rx_pkt->uuid[12],rx_pkt->uuid[13],rx_pkt->uuid[14],rx_pkt->uuid[15]);
             /* check if it is our beacon packet */
             last_rx_ok = last_crc_is_ok ? (( rx_pkt->adv_address_low == MY_ADV_ADDRESS_LOW ) && ( rx_pkt->adv_address_hi == MY_ADV_ADDRESS_HI )) : 0;
             // last_rx_ok = last_crc_is_ok; //XXX!
