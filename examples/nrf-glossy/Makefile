@@ -63,7 +63,7 @@ initiator?=0 #initiator node ID
 test_mode_tx_carrier?=0 #do not tx/rx data, but transmit a constant unmodulated carrier (by keeping the radio in idle mode in slots instead of starting tx/rx)
 #unnecessary
 DURATION ?= 10 #duration of the experiment
-TESTBED_CONF?=WIRED_TESTBED #Default testbed 
+TESTBED_CONF?=HOME_TESTBED #Default testbed 
 round_robin_initiator ?= 0 #switch initiator every round
 cpu_busywait ?= 0
 
