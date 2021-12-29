@@ -187,7 +187,7 @@ PROCESS_THREAD(tx_process, ev, data)
   #endif /* PRINT_TX_STATUS */
 
   volatile static rtimer_clock_t tt =0, t_start_round = 0;
-  static bool do_tx = 0, do_rx = 0, synced = 0, joined = 0;
+  static bool do_tx = 0, do_rx = 0, synced = 0, joined = 0, do_event_raising = 0;
   static volatile bool  last_crc_is_ok = 0;
   static int32_t round_counter = 0;
   uint32_t guard_time = 0;
@@ -261,10 +261,10 @@ PROCESS_THREAD(tx_process, ev, data)
 
   while(1)
   {
-    /*if(round_counter==testbed_size)
+    if(round_counter==TESTBED_SIZE)
     {
-      uuids_array = event_uuids_array;
-    }*/
+      do_event_raising = 1;
+    }
     ble_beacon_t *last_rx_pkt;
     rx_ok = 0, rx_crc_failed = 0, rx_none = 0; tx_done=0; berr = 0; berr_per_pkt_max = 0, berr_per_byte_max = 0; corrupt_msg_index = 0;
     #if PRINT_TX_STATUS
