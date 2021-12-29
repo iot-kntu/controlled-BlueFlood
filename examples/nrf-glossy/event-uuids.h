@@ -1,3 +1,5 @@
+#ifndef EVENT_UUIDS_H
+#define EVENT_UUIDS_H
 extern const uint8_t event_uuids_array[UUID_LIST_LENGTH][16];
 
 #define EVENT_UUID_ARRAY ((uint8_t[UUID_LIST_LENGTH][16]){ \

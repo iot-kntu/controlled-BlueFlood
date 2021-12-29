@@ -1,3 +1,5 @@
+#ifndef INTEREST_UUIDS_H
+#define INTEREST_UUIDS_H
 extern const uint8_t interest_uuids_array[UUID_LIST_LENGTH][16];
 
 #define INTEREST_UUID_ARRAY ((uint8_t[UUID_LIST_LENGTH][16]){ \
