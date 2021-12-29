@@ -236,7 +236,7 @@ PROCESS_THREAD(tx_process, ev, data)
   my_radio_init(&my_id, my_tx_buffer);
   // leds_off(LEDS_ALL);
   my_index = get_testbed_index(my_id, testbed_ids, TESTBED_SIZE);
-  init_ibeacon_packet(&msg, &uuids_array[initiator_node_index][0], round, slot,initiator_node_index,initiator_node_index);
+  init_ibeacon_packet(&msg, do_event_raising?&event_uuids_array[initiator_node_index][0]:&interest_uuids_array[initiator_node_index][0], round, slot,initiator_node_index,initiator_node_index);
   watchdog_periodic();
 
   if(IS_INITIATOR()){
@@ -288,7 +288,7 @@ PROCESS_THREAD(tx_process, ev, data)
     } else {
       initiator_node_index = INITATOR_NODE_INDEX;
     } 
-    init_ibeacon_packet(&msg, &uuids_array[initiator_node_index][0], round, slot,initiator_node_index,initiator_node_index);
+    init_ibeacon_packet(&msg, do_event_raising?&event_uuids_array[initiator_node_index][0]:&interest_uuids_array[initiator_node_index][0], round, slot,initiator_node_index,initiator_node_index);
     #endif /* ROUND_ROBIN_INITIATOR */
     // nrf_gpio_cfg_output(ROUND_INDICATOR_PIN);
     nrf_gpio_pin_toggle(ROUND_INDICATOR_PIN);
@@ -722,7 +722,7 @@ PROCESS_THREAD(tx_process, ev, data)
     }
 
     round++;
-    init_ibeacon_packet(&msg, &uuids_array[initiator_node_index][0], round, slot,initiator_node_index,initiator_node_index);
+    init_ibeacon_packet(&msg, do_event_raising?&event_uuids_array[initiator_node_index][0]:&interest_uuids_array[initiator_node_index][0], round, slot,initiator_node_index,initiator_node_index);
     memset(my_rx_buffer, 0, msg.radio_len);
     //msg.round=round;
     rtimer_clock_t now, t_start_round_old;
