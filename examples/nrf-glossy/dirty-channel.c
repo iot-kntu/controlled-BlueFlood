@@ -189,7 +189,7 @@ PROCESS_THREAD(tx_process, ev, data)
   volatile static rtimer_clock_t tt =0, t_start_round = 0;
   static bool do_tx = 0, do_rx = 0, synced = 0, joined = 0, do_config = 1;
   static volatile bool  last_crc_is_ok = 0;
-  static int32_t round_counter = 0;
+  //static int32_t round_counter = 0;
   uint8_t uuids_array[UUID_LIST_LENGTH][16] = interest_uuids_array;
   uint32_t guard_time = 0;
   int i;
@@ -262,11 +262,11 @@ PROCESS_THREAD(tx_process, ev, data)
 
   while(1)
   {
-    if(round_counter==testbed_size)
+    /*if(round_counter==testbed_size)
     {
       do_config = 0;
       uuids_array = event_uuids_array;
-    }
+    }*/
     ble_beacon_t *last_rx_pkt;
     rx_ok = 0, rx_crc_failed = 0, rx_none = 0; tx_done=0; berr = 0; berr_per_pkt_max = 0, berr_per_byte_max = 0; corrupt_msg_index = 0;
     #if PRINT_TX_STATUS
@@ -597,7 +597,7 @@ PROCESS_THREAD(tx_process, ev, data)
     berr_total += berr;
     rx_failed_total += rx_crc_failed + rx_none;
     uint32_t rx_ok_percent = (rx_ok_total*100) / (MAX(1, rx_ok_total+rx_failed_total));
-    round_counter++;
+    //round_counter++;
 
 #if ENABLE_BLUEFLOOD_LOGS
 
