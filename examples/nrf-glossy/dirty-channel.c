@@ -45,7 +45,7 @@
 #define SLOT_LEN_NOTSYNCED (RX_SLOT_LEN+GUARD_TIME)
 #define FIRST_SLOT_OFFSET (SLOT_PROCESSING_TIME + GUARD_TIME + ADDRESS_EVENT_T_TX_OFFSET)
 /*---------------------------------------------------------------------------*/
-//const uint8_t uuids_array[UUID_LIST_LENGTH][16] = UUID_ARRAY;
+const uint8_t uuids_array[UUID_LIST_LENGTH][16] = UUID_ARRAY;
 const uint8_t interest_uuids_array[UUID_LIST_LENGTH][16] = INTEREST_UUID_ARRAY;
 const uint8_t event_uuids_array[UUID_LIST_LENGTH][16] = EVENT_UUID_ARRAY;
 const uint32_t testbed_ids[] = TESTBED_IDS;
@@ -190,7 +190,6 @@ PROCESS_THREAD(tx_process, ev, data)
   static bool do_tx = 0, do_rx = 0, synced = 0, joined = 0;
   static volatile bool  last_crc_is_ok = 0;
   static int32_t round_counter = 0;
-  uint8_t uuids_array[UUID_LIST_LENGTH][16] = interest_uuids_array;
   uint32_t guard_time = 0;
   int i;
   uint8_t last_rx_ok = 0;
