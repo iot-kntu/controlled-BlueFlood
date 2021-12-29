@@ -9,6 +9,7 @@
 
 #include "uuids.h"
 #include "interest-uuids.h"
+#include "event-uuids.h"
 #include "ble-beacon-header.h"
 #include "encode-decode-hamming-crc24.h"
 
