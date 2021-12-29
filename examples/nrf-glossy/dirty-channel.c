@@ -262,10 +262,10 @@ PROCESS_THREAD(tx_process, ev, data)
 
   while(1)
   {
-    if(round_counter==testbed_size)
+    /*if(round_counter==testbed_size)
     {
       uuids_array = event_uuids_array;
-    }
+    }*/
     ble_beacon_t *last_rx_pkt;
     rx_ok = 0, rx_crc_failed = 0, rx_none = 0; tx_done=0; berr = 0; berr_per_pkt_max = 0, berr_per_byte_max = 0; corrupt_msg_index = 0;
     #if PRINT_TX_STATUS
