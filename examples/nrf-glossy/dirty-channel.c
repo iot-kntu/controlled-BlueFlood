@@ -8,6 +8,7 @@
 #include "watchdog.h"
 
 #include "uuids.h"
+#include "interest-uuids.h"
 #include "ble-beacon-header.h"
 #include "encode-decode-hamming-crc24.h"
 
@@ -43,7 +44,9 @@
 #define SLOT_LEN_NOTSYNCED (RX_SLOT_LEN+GUARD_TIME)
 #define FIRST_SLOT_OFFSET (SLOT_PROCESSING_TIME + GUARD_TIME + ADDRESS_EVENT_T_TX_OFFSET)
 /*---------------------------------------------------------------------------*/
-const uint8_t uuids_array[UUID_LIST_LENGTH][16] = UUID_ARRAY;
+//const uint8_t uuids_array[UUID_LIST_LENGTH][16] = UUID_ARRAY;
+const uint8_t interest_uuids_array[UUID_LIST_LENGTH][16] = INTEREST_UUID_ARRAY;
+const uint8_t event_uuids_array[UUID_LIST_LENGTH][16] = EVENT_UUID_ARRAY;
 const uint32_t testbed_ids[] = TESTBED_IDS;
 enum {MSG_TURN_BROADCAST=0xff, MSG_TURN_NONE=0xfe};
 /*---------------------------------------------------------------------------*/
@@ -183,8 +186,10 @@ PROCESS_THREAD(tx_process, ev, data)
   #endif /* PRINT_TX_STATUS */
 
   volatile static rtimer_clock_t tt =0, t_start_round = 0;
-  static bool do_tx = 0, do_rx = 0, synced = 0, joined = 0;
+  static bool do_tx = 0, do_rx = 0, synced = 0, joined = 0, do_config = 1;
   static volatile bool  last_crc_is_ok = 0;
+  static int32_t round_counter = 0;
+  uint8_t uuids_array[UUID_LIST_LENGTH][16] = interest_uuids_array;
   uint32_t guard_time = 0;
   int i;
   uint8_t last_rx_ok = 0;
@@ -256,6 +261,11 @@ PROCESS_THREAD(tx_process, ev, data)
 
   while(1)
   {
+    if(round_counter==testbed_size)
+    {
+      do_config = 0;
+      uuids_array = event_uuids_array;
+    }
     ble_beacon_t *last_rx_pkt;
     rx_ok = 0, rx_crc_failed = 0, rx_none = 0; tx_done=0; berr = 0; berr_per_pkt_max = 0, berr_per_byte_max = 0; corrupt_msg_index = 0;
     #if PRINT_TX_STATUS
@@ -265,6 +275,7 @@ PROCESS_THREAD(tx_process, ev, data)
     synced = 0;
     sync_slot = UINT16_MAX;
     my_turn = 0;
+
 
     #if (TESTBED==WIRED_TESTBED)
     #define ROUND_LEN_RULE (((!IS_INITIATOR()) && synced && (slot < ROUND_LEN)) || ((IS_INITIATOR() || !synced) && (slot < ROUND_LEN)) )
@@ -287,7 +298,7 @@ PROCESS_THREAD(tx_process, ev, data)
       tt = t_start_round + slot * SLOT_LEN;
       // BUSYWAIT_UNTIL(1, tt - guard_time);
       #if ROUND_ROBIN_INITIATOR
-      do_tx = ( IS_INITIATOR() && (joined || (slot % 2 == 0))) || (!IS_INITIATOR() && synced && my_turn && last_rx_pkt->uuid[15]%2==0);
+      do_tx = ( IS_INITIATOR() && (joined || (slot % 2 == 0))) || (!IS_INITIATOR() && synced && my_turn /*&& last_rx_pkt->uuid[15]%2==0*/);
       #else
       do_tx = (IS_INITIATOR() && !synced && (slot % 2 == 0)) || (!IS_INITIATOR() && synced && (slot > 0) && my_turn);
       // do_tx = (IS_INITIATOR() && (slot < 4) && (slot % 2 == 0)) || (!IS_INITIATOR() && synced && my_turn && (slot % 2 != 0));
@@ -585,6 +596,7 @@ PROCESS_THREAD(tx_process, ev, data)
     berr_total += berr;
     rx_failed_total += rx_crc_failed + rx_none;
     uint32_t rx_ok_percent = (rx_ok_total*100) / (MAX(1, rx_ok_total+rx_failed_total));
+    round_counter++;
 
 #if ENABLE_BLUEFLOOD_LOGS
 
