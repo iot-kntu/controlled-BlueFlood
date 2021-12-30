@@ -164,9 +164,9 @@ void rtc_schedule(uint32_t ticks);
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(tx_process, ev, data)
 {
-  static uint8_t[TESTBED_SIZE] childs;
+  static uint8_t childs[TESTBED_SIZE];
   static uint16_t childCounter = 0;
-  static uint8_t[112] interests;
+  static uint8_t interests[112];
   static uint8_t my_turn = 0;
   static uint8_t failed_rounds = 0;
   static int8_t my_index = -1;
