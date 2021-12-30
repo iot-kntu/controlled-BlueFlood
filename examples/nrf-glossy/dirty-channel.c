@@ -263,7 +263,7 @@ PROCESS_THREAD(tx_process, ev, data)
 
   while(1)
   {
-    if((round_counter/TESTBED_SIZE)%2!=0)
+    if((round/TESTBED_SIZE)%2!=0)
     {
       do_event_raising = 1;
       PRINTF("change phase to event raising \n");
