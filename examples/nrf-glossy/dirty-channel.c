@@ -601,9 +601,10 @@ PROCESS_THREAD(tx_process, ev, data)
     round_counter++;
     if(round_counter<TESTBED_SIZE&&last_rx_ok && last_crc_is_ok && last_rx_pkt->uuid[1]==my_id){
       childs[childCounter] = last_rx_pkt->uuid[0];
+      childCounter++;
     }
       for(i=0; i<childCounter+1; i++){
-        PRINTF("childs:%d\n",childs[i]);
+        PRINTF("childs:%lx\n",childs[i]);
       }
 
 #if ENABLE_BLUEFLOOD_LOGS
