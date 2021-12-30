@@ -585,7 +585,7 @@ PROCESS_THREAD(tx_process, ev, data)
       }
     }
     if(initiator_node_index != my_index){    
-      PRINTF("recieved packet UUID: %x%x%x%x-%x%x-%x%x-%x%x-%x%x%x%x%x%x \n",last_rx_pkt->uuid[0],last_rx_pkt->uuid[1],last_rx_pkt->uuid[2],last_rx_pkt->uuid[3],last_rx_pkt->uuid[4],last_rx_pkt->uuid[5],last_rx_pkt->uuid[6],last_rx_pkt->uuid[7],last_rx_pkt->uuid[8],last_rx_pkt->uuid[9],last_rx_pkt->uuid[10],last_rx_pkt->uuid[11],last_rx_pkt->uuid[12],last_rx_pkt->uuid[13],last_rx_pkt->uuid[14],last_rx_pkt->uuid[15]);
+      //PRINTF("recieved packet UUID: %x%x%x%x-%x%x-%x%x-%x%x-%x%x%x%x%x%x \n",last_rx_pkt->uuid[0],last_rx_pkt->uuid[1],last_rx_pkt->uuid[2],last_rx_pkt->uuid[3],last_rx_pkt->uuid[4],last_rx_pkt->uuid[5],last_rx_pkt->uuid[6],last_rx_pkt->uuid[7],last_rx_pkt->uuid[8],last_rx_pkt->uuid[9],last_rx_pkt->uuid[10],last_rx_pkt->uuid[11],last_rx_pkt->uuid[12],last_rx_pkt->uuid[13],last_rx_pkt->uuid[14],last_rx_pkt->uuid[15]);
       bool isInterestPkt = last_rx_pkt->uuid[0]!=last_rx_pkt->uuid[1];
       if(last_rx_pkt->uuid[1]==my_index && isInterestPkt){
         childs[last_rx_pkt->uuid[0]] = 1;
@@ -595,10 +595,10 @@ PROCESS_THREAD(tx_process, ev, data)
       }
     }
     PRINTF("node interests: %x-%x-%x-%x-%x-%x-%x-%x-%x-%x-%x-%x-%x-%x \n",interests[0],interests[1],interests[2],interests[3],interests[4],interests[5],interests[6],interests[7],interests[8],interests[9],interests[10],interests[11],interests[12],interests[13]);
-    for(i=0; i<TESTBED_SIZE; i++){
+    /*for(i=0; i<TESTBED_SIZE; i++){
       PRINTF("%d",childs[i]);
     }
-    PRINTF("childs...\n");
+    PRINTF("childs...\n");*/
     my_radio_off_completely();
     // nrf_gpio_cfg_output(ROUND_INDICATOR_PIN);
     nrf_gpio_pin_toggle(ROUND_INDICATOR_PIN);
