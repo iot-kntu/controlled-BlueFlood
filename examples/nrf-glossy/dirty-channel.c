@@ -599,13 +599,13 @@ PROCESS_THREAD(tx_process, ev, data)
     rx_failed_total += rx_crc_failed + rx_none;
     uint32_t rx_ok_percent = (rx_ok_total*100) / (MAX(1, rx_ok_total+rx_failed_total));
     round_counter++;
-    PRINTF("last uuid:%d myindex: %d/n",last_rx_pkt->uuid[1],my_index);
-    if(round_counter<TESTBED_SIZE&&last_rx_ok && last_crc_is_ok && last_rx_pkt->uuid[1]==my_index){
+    PRINTF("I'm sender parent:%d \n",last_rx_pkt->uuid[1]==my_index);
+    if(!IS_INITIATOR()&&round_counter<TESTBED_SIZE&&last_rx_ok && last_crc_is_ok && last_rx_pkt->uuid[1]==my_index){
       childs[childCounter] = last_rx_pkt->uuid[0];
       childCounter++;
     }
       for(i=0; i<childCounter; i++){
-        PRINTF("childs:%x\n",childs[i]);
+        PRINTF("childs:%x \n",childs[i]);
       }
 
 #if ENABLE_BLUEFLOOD_LOGS
