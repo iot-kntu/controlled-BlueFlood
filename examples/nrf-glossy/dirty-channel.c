@@ -165,7 +165,7 @@ void rtc_schedule(uint32_t ticks);
 PROCESS_THREAD(tx_process, ev, data)
 {
   static bool childs[TESTBED_SIZE]= {0};
-  static uint8_t interests[112];
+  static uint8_t interests[14] = {0};
   static uint8_t my_turn = 0;
   static uint8_t failed_rounds = 0;
   static int8_t my_index = -1;
@@ -300,6 +300,7 @@ PROCESS_THREAD(tx_process, ev, data)
       tt = t_start_round + slot * SLOT_LEN;
       // BUSYWAIT_UNTIL(1, tt - guard_time);
       #if ROUND_ROBIN_INITIATOR
+      bool isEventPkt = last_rx_pkt->uuid[0]==last_rx_pkt->uuid[1];
       do_tx = ( IS_INITIATOR() && (joined || (slot % 2 == 0))) || (!IS_INITIATOR() && synced && my_turn /*&& last_rx_pkt->uuid[15]%2==0*/);
       #else
       do_tx = (IS_INITIATOR() && !synced && (slot % 2 == 0)) || (!IS_INITIATOR() && synced && (slot > 0) && my_turn);
@@ -586,14 +587,18 @@ PROCESS_THREAD(tx_process, ev, data)
     }
     if(!IS_INITIATOR()){    
       PRINTF("recieved packet UUID: %x%x%x%x-%x%x-%x%x-%x%x-%x%x%x%x%x%x \n",last_rx_pkt->uuid[0],last_rx_pkt->uuid[1],last_rx_pkt->uuid[2],last_rx_pkt->uuid[3],last_rx_pkt->uuid[4],last_rx_pkt->uuid[5],last_rx_pkt->uuid[6],last_rx_pkt->uuid[7],last_rx_pkt->uuid[8],last_rx_pkt->uuid[9],last_rx_pkt->uuid[10],last_rx_pkt->uuid[11],last_rx_pkt->uuid[12],last_rx_pkt->uuid[13],last_rx_pkt->uuid[14],last_rx_pkt->uuid[15]);
-      if(last_rx_pkt->uuid[1]==my_index){
+      bool isInterestPkt = last_rx_pkt->uuid[0]!=last_rx_pkt->uuid[1];
+      if(last_rx_pkt->uuid[1]==my_index && isInterestPkt){
         childs[last_rx_pkt->uuid[0]] = 1;
+        for(i=0; i<14; i++){
+          interests[i] = interests[i] ^ last_rx_pkt->uuid[i+2];
+        }
       }
     }
     for(i=0; i<TESTBED_SIZE; i++){
       PRINTF("%d",childs[i]);
-      PRINTF("childs...\n");
     }
+    PRINTF("childs...\n");
     my_radio_off_completely();
     // nrf_gpio_cfg_output(ROUND_INDICATOR_PIN);
     nrf_gpio_pin_toggle(ROUND_INDICATOR_PIN);
