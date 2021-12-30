@@ -263,10 +263,15 @@ PROCESS_THREAD(tx_process, ev, data)
 
   while(1)
   {
-    if(round_counter==TESTBED_SIZE)
+    if((round_counter/TESTBED_SIZE)%2!=0)
     {
       do_event_raising = 1;
-      PRINTF("change phase \n");
+      PRINTF("change phase to event raising \n");
+    }
+    else
+    {
+      do_event_raising = 0;
+      PRINTF("change phase to configuration \n");
     }
     ble_beacon_t *last_rx_pkt;
     rx_ok = 0, rx_crc_failed = 0, rx_none = 0; tx_done=0; berr = 0; berr_per_pkt_max = 0, berr_per_byte_max = 0; corrupt_msg_index = 0;
