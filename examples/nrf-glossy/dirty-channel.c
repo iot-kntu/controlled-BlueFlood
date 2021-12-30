@@ -592,7 +592,7 @@ PROCESS_THREAD(tx_process, ev, data)
     }
     for(i=0; i<TESTBED_SIZE; i++){
       PRINTF("%d",childs[i]);
-      PRINTF("childs...\n")
+      PRINTF("childs...\n");
     }
     my_radio_off_completely();
     // nrf_gpio_cfg_output(ROUND_INDICATOR_PIN);
