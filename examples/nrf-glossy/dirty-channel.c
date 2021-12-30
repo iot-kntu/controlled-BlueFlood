@@ -599,11 +599,11 @@ PROCESS_THREAD(tx_process, ev, data)
     rx_failed_total += rx_crc_failed + rx_none;
     uint32_t rx_ok_percent = (rx_ok_total*100) / (MAX(1, rx_ok_total+rx_failed_total));
     round_counter++;
-    if(round_counter<TESTBED_SIZE&&last_rx_ok && last_crc_is_ok && last_rx_pkt->uuid[1]==my_id){
+    if(round_counter<TESTBED_SIZE&&last_rx_ok && last_crc_is_ok && last_rx_pkt->uuid[1]==interest_uuids_array[my_id][0]){
       childs[childCounter] = last_rx_pkt->uuid[0];
       childCounter++;
     }
-      for(i=0; i<childCounter+1; i++){
+      for(i=0; i<childCounter; i++){
         PRINTF("childs:%lx\n",childs[i]);
       }
 
