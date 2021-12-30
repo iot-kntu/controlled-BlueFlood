@@ -606,6 +606,7 @@ PROCESS_THREAD(tx_process, ev, data)
     rx_failed_total += rx_crc_failed + rx_none;
     uint32_t rx_ok_percent = (rx_ok_total*100) / (MAX(1, rx_ok_total+rx_failed_total));
     round_counter++;
+    PRINTF("roundcounter:%d \n",round_counter);
 
 #if ENABLE_BLUEFLOOD_LOGS
 
