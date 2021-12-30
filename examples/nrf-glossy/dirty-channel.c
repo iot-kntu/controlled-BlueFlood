@@ -586,8 +586,8 @@ PROCESS_THREAD(tx_process, ev, data)
     }
     if(!IS_INITIATOR()){    
       PRINTF("recieved packet UUID: %x%x%x%x-%x%x-%x%x-%x%x-%x%x%x%x%x%x \n",last_rx_pkt->uuid[0],last_rx_pkt->uuid[1],last_rx_pkt->uuid[2],last_rx_pkt->uuid[3],last_rx_pkt->uuid[4],last_rx_pkt->uuid[5],last_rx_pkt->uuid[6],last_rx_pkt->uuid[7],last_rx_pkt->uuid[8],last_rx_pkt->uuid[9],last_rx_pkt->uuid[10],last_rx_pkt->uuid[11],last_rx_pkt->uuid[12],last_rx_pkt->uuid[13],last_rx_pkt->uuid[14],last_rx_pkt->uuid[15]);
-      if(last_rx_pkt->uuid[1]==my_index){
-        childs[childCounter%TESTBED_SIZE] = last_rx_pkt->uuid[0];
+      if(!do_event_raising && last_rx_pkt->uuid[1]==my_index){
+        childs[childCounter] = last_rx_pkt->uuid[0];
         childCounter++;
       }
     }
