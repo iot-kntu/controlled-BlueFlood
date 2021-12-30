@@ -604,7 +604,7 @@ PROCESS_THREAD(tx_process, ev, data)
       childs[childCounter] = last_rx_pkt->uuid[0];
       childCounter++;
     }
-    PRINTF("%d***************\n"childCounter);
+    PRINTF("%d***************\n",childCounter);
       for(i=0; i<childCounter; i++){
         PRINTF("childs:%x \n",childs[i]);
       }
