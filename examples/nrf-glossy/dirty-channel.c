@@ -603,7 +603,7 @@ PROCESS_THREAD(tx_process, ev, data)
       childs[childCounter] = last_rx_pkt->uuid[0];
     }
       for(i=0; i<childCounter+1; i++){
-        PRINTF("childs:%d",childs[i]);
+        PRINTF("childs:%d\n",childs[i]);
       }
 
 #if ENABLE_BLUEFLOOD_LOGS
