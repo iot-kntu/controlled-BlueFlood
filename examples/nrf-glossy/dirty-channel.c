@@ -589,13 +589,14 @@ PROCESS_THREAD(tx_process, ev, data)
       bool isInterestPkt = last_rx_pkt->uuid[0]!=last_rx_pkt->uuid[1];
       if(last_rx_pkt->uuid[1]==my_index && isInterestPkt){
         childs[last_rx_pkt->uuid[0]] = 1;
+      PRINTF("node interests: %x-%x-%x-%x-%x-%x-%x-%x-%x-%x-%x-%x-%x-%x \n",interests[0],interests[1],interests[2],interests[3],interests[4],interests[5],interests[6],interests[7],interests[8],interests[9],interests[10],interests[11],interests[12],interests[13]);
         for(i=0; i<14; i++){
           interests[i] = interests[i] ^ last_rx_pkt->uuid[i+2];
         }
-      }
-    }
       PRINTF("node interests: %x-%x-%x-%x-%x-%x-%x-%x-%x-%x-%x-%x-%x-%x \n",interests[0],interests[1],interests[2],interests[3],interests[4],interests[5],interests[6],interests[7],interests[8],interests[9],interests[10],interests[11],interests[12],interests[13]);
 
+      }
+    }
     for(i=0; i<TESTBED_SIZE; i++){
       PRINTF("%d",childs[i]);
     }
