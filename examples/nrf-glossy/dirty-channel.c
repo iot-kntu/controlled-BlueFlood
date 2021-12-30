@@ -600,7 +600,7 @@ PROCESS_THREAD(tx_process, ev, data)
     uint32_t rx_ok_percent = (rx_ok_total*100) / (MAX(1, rx_ok_total+rx_failed_total));
     round_counter++;
     PRINTF("I'm sender parent:%d \n",last_rx_pkt->uuid[1]==my_index);
-    if(!IS_INITIATOR()&&round_counter<TESTBED_SIZE&&last_rx_ok && last_crc_is_ok && last_rx_pkt->uuid[1]==my_index){
+    if(!IS_INITIATOR()&&!do_event_raising&&last_rx_ok && last_crc_is_ok && last_rx_pkt->uuid[1]==my_index){
       childs[childCounter] = last_rx_pkt->uuid[0];
       childCounter++;
     }
