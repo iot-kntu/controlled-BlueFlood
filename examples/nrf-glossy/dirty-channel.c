@@ -604,9 +604,9 @@ PROCESS_THREAD(tx_process, ev, data)
       childs[childCounter] = last_rx_pkt->uuid[0];
       childCounter++;
     }
-      // for(i=0; i<childCounter; i++){
-      //   PRINTF("childs:%lx\n",childs[i]);
-      // }
+      for(i=0; i<childCounter; i++){
+        PRINTF("childs:%x\n",childs[i]);
+      }
 
 #if ENABLE_BLUEFLOOD_LOGS
 
