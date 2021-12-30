@@ -164,8 +164,7 @@ void rtc_schedule(uint32_t ticks);
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(tx_process, ev, data)
 {
-  static uint8_t childs[TESTBED_SIZE]= {0};
-  static uint16_t childCounter = 0;
+  static bool childs[TESTBED_SIZE]= {0};
   static uint8_t interests[112];
   static uint8_t my_turn = 0;
   static uint8_t failed_rounds = 0;
@@ -587,14 +586,13 @@ PROCESS_THREAD(tx_process, ev, data)
     }
     if(!IS_INITIATOR()){    
       PRINTF("recieved packet UUID: %x%x%x%x-%x%x-%x%x-%x%x-%x%x%x%x%x%x \n",last_rx_pkt->uuid[0],last_rx_pkt->uuid[1],last_rx_pkt->uuid[2],last_rx_pkt->uuid[3],last_rx_pkt->uuid[4],last_rx_pkt->uuid[5],last_rx_pkt->uuid[6],last_rx_pkt->uuid[7],last_rx_pkt->uuid[8],last_rx_pkt->uuid[9],last_rx_pkt->uuid[10],last_rx_pkt->uuid[11],last_rx_pkt->uuid[12],last_rx_pkt->uuid[13],last_rx_pkt->uuid[14],last_rx_pkt->uuid[15]);
-      if(!do_event_raising && last_rx_pkt->uuid[1]==my_index){
-        childs[childCounter] = last_rx_pkt->uuid[0];
-        childCounter++;
+      if(last_rx_pkt->uuid[1]==my_index){
+        childs[last_rx_pkt->uuid[0]] = 1;
       }
     }
-    PRINTF("%d***************\n",childCounter);
-    for(i=0; i<childCounter; i++){
-      PRINTF("childs:%x \n",childs[i]);
+    for(i=0; i<TESTBED_SIZE; i++){
+      PRINTF("%d",childs[i]);
+      PRINTF("childs...\n")
     }
     my_radio_off_completely();
     // nrf_gpio_cfg_output(ROUND_INDICATOR_PIN);
