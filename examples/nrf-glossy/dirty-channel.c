@@ -88,7 +88,7 @@ static int get_testbed_index(uint32_t my_id, const uint32_t *testbed_ids, uint8_
   return -1;
 }
 /*---------------------------------------------------------------------------*/
-static void init_ibeacon_packet(ble_beacon_t *pkt, const uint8_t* uuid, uint16_t round, uint16_t slot,uint16_t minor,uint16_t major)
+static void init_ibeacon_packet(ble_beacon_t *pkt, const uint8_t* uuid, uint16_t round, uint16_t slot)
 {
 #if (RADIO_MODE_CONF == RADIO_MODE_MODE_Ieee802154_250Kbit)
     pkt->radio_len = sizeof(ble_beacon_t) - 1; /* execlude len field */
@@ -101,15 +101,15 @@ static void init_ibeacon_packet(ble_beacon_t *pkt, const uint8_t* uuid, uint16_t
   pkt->adv_address_hi = MY_ADV_ADDRESS_HI;
   memcpy(pkt->uuid, uuid, sizeof(pkt->uuid));
   pkt->round = round;
-  pkt->minor = minor;
-  pkt->major = major;
+  //pkt->minor = minor;
+  //pkt->major = major;
   pkt->slot = slot;
   pkt->turn = MSG_TURN_NONE;
 
   #if (PACKET_IBEACON_FORMAT)
   pkt->ad_flags_length = 2; //2bytes flags
-  pkt->minor = minor;
-  pkt->major = major;
+  //pkt->minor = minor;
+  //pkt->major = major;
   pkt->ad_flags_type = 1; //1=flags
   pkt->ad_flags_data = 6; //(non-connectable, undirected advertising, single-mode device)
   pkt->ad_length = 0x1a; //26 bytes, the remainder of the packet
@@ -164,6 +164,9 @@ void rtc_schedule(uint32_t ticks);
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(tx_process, ev, data)
 {
+  static uint8_t[TESTBED_SIZE] childs;
+  static uint16_t childCounter = 0;
+  static uint8_t[112] interests;
   static uint8_t my_turn = 0;
   static uint8_t failed_rounds = 0;
   static int8_t my_index = -1;
@@ -596,6 +599,12 @@ PROCESS_THREAD(tx_process, ev, data)
     rx_failed_total += rx_crc_failed + rx_none;
     uint32_t rx_ok_percent = (rx_ok_total*100) / (MAX(1, rx_ok_total+rx_failed_total));
     round_counter++;
+    if(round_counter<TESTBED_SIZE&&last_rx_ok && last_crc_is_ok && last_rx_pkt=>uuid[1]==my_id){
+      childs[childCounter] = last_rx_pkt=>uuid[0];
+      for(i=0; i<childCounter+1; i++){
+        PRINTF("childs:",childs[i]);
+      }
+    }
 
 #if ENABLE_BLUEFLOOD_LOGS
 
