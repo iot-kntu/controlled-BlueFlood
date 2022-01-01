@@ -299,8 +299,16 @@ PROCESS_THREAD(tx_process, ev, data)
       tt = t_start_round + slot * SLOT_LEN;
       // BUSYWAIT_UNTIL(1, tt - guard_time);
       #if ROUND_ROBIN_INITIATOR
-      bool isEventPkt = last_rx_pkt->uuid[0]==last_rx_pkt->uuid[1];
-      do_tx = ( IS_INITIATOR() && (joined || (slot % 2 == 0))) || (!IS_INITIATOR() && synced && my_turn /*&& last_rx_pkt->uuid[15]%2==0*/);
+      bool eventIsChildsInterest = 0;
+      for(i=0; i<14; i++){
+          if(interests[i] | last_rx_pkt->uuid[i+2] == 1){
+            eventIsChildsInterest = 1
+          }
+      }
+      bool isEventPkt = last_rx_pkt->uuid[0] == last_rx_pkt->uuid[1];
+      bool isSenderMyChild = childs[last_rx_pkt->uuid[0]] == 1;
+      bool do_flooding_based_event = !isEventPkt || isSenderMyChild || eventIsChildsInterest;
+      do_tx = ( IS_INITIATOR() && (joined || (slot % 2 == 0))) || (!IS_INITIATOR() && synced && my_turn && do_flooding_based_event);
       #else
       do_tx = (IS_INITIATOR() && !synced && (slot % 2 == 0)) || (!IS_INITIATOR() && synced && (slot > 0) && my_turn);
       // do_tx = (IS_INITIATOR() && (slot < 4) && (slot % 2 == 0)) || (!IS_INITIATOR() && synced && my_turn && (slot % 2 != 0));
