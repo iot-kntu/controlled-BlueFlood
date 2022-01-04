@@ -264,7 +264,7 @@ PROCESS_THREAD(tx_process, ev, data)
 
   while(1)
   {
-    if(round>100)
+    if(round_counter>100)
     {
       do_event_raising = 1;
     }
