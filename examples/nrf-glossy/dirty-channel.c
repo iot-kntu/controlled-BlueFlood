@@ -190,7 +190,7 @@ PROCESS_THREAD(tx_process, ev, data)
   #endif /* PRINT_TX_STATUS */
 
   volatile static rtimer_clock_t tt =0, t_start_round = 0;
-  static bool do_tx = 0, do_rx = 0, synced = 0, joined = 0, do_event_raising = 0;
+  static bool do_tx = 0, do_rx = 0, synced = 0, joined = 0, do_event_raising = 0, present_in_flooding = 0;
   static volatile bool  last_crc_is_ok = 0;
   static int32_t round_counter = 0;
   uint32_t guard_time = 0;
@@ -316,6 +316,10 @@ PROCESS_THREAD(tx_process, ev, data)
       // do_tx = (IS_INITIATOR()) || (!IS_INITIATOR() && synced && my_turn);
       #endif /* ROUND_ROBIN_INITIATOR */
       
+      if(do_tx&&!present_in_flooding)
+      {
+        present_in_flooding = 1;
+      }
       //do_tx = my_id == tx_node_id;
       do_rx = !do_tx;
       if(do_tx){
@@ -596,11 +600,12 @@ PROCESS_THREAD(tx_process, ev, data)
     bool isInterestPkt = last_rx_pkt->uuid[0]!=last_rx_pkt->uuid[1];
     if(!isInterestPkt){
       total_event_round++;
-      if(do_tx){
+      if(present_in_flooding){
         present_in_event_round++;
       }
       PRINTF("flooding presentage: %f \n", present_in_event_round*100/total_event_round);
     }
+    present_in_flooding = 0;
     if(initiator_node_index != my_index){    
       //PRINTF("recieved packet UUID: %x%x%x%x-%x%x-%x%x-%x%x-%x%x%x%x%x%x \n",last_rx_pkt->uuid[0],last_rx_pkt->uuid[1],last_rx_pkt->uuid[2],last_rx_pkt->uuid[3],last_rx_pkt->uuid[4],last_rx_pkt->uuid[5],last_rx_pkt->uuid[6],last_rx_pkt->uuid[7],last_rx_pkt->uuid[8],last_rx_pkt->uuid[9],last_rx_pkt->uuid[10],last_rx_pkt->uuid[11],last_rx_pkt->uuid[12],last_rx_pkt->uuid[13],last_rx_pkt->uuid[14],last_rx_pkt->uuid[15]);
       if(last_rx_pkt->uuid[1]==my_index && isInterestPkt){
