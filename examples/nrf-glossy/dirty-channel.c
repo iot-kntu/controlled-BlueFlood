@@ -303,7 +303,7 @@ PROCESS_THREAD(tx_process, ev, data)
       bool eventIsChildsInterest = 0;
       for(i=0; i<14; i++){
           if(interests[i] | last_rx_pkt->uuid[i+2] == 1){
-            eventIsChildsInterest = 1
+            eventIsChildsInterest = 1;
           }
       }
       bool isEventPkt = last_rx_pkt->uuid[0] == last_rx_pkt->uuid[1];
