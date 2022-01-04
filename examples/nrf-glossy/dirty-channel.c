@@ -306,9 +306,8 @@ PROCESS_THREAD(tx_process, ev, data)
             eventIsChildsInterest = 1;
           }
       }
-      bool isEventPkt = last_rx_pkt->uuid[0] == last_rx_pkt->uuid[1];
       bool isSenderMyChild = childs[last_rx_pkt->uuid[0]] == 1;
-      bool do_flooding_based_event = !isEventPkt || isSenderMyChild || eventIsChildsInterest;
+      bool do_flooding_based_event = !do_event_raising || isSenderMyChild || eventIsChildsInterest;
       do_tx = ( IS_INITIATOR() && (joined || (slot % 2 == 0))) || (!IS_INITIATOR() && synced && my_turn && do_flooding_based_event);
       #else
       do_tx = (IS_INITIATOR() && !synced && (slot % 2 == 0)) || (!IS_INITIATOR() && synced && (slot > 0) && my_turn);
@@ -597,7 +596,6 @@ PROCESS_THREAD(tx_process, ev, data)
         }
       }
     }
-    //bool isInterestPkt = last_rx_pkt->uuid[0]!=last_rx_pkt->uuid[1];
     if(do_event_raising){
       total_event_round++;
       if(present_in_flooding){
