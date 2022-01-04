@@ -173,7 +173,8 @@ PROCESS_THREAD(tx_process, ev, data)
   static uint16_t rx_ok = 0, rx_crc_failed = 0, rx_none = 0, tx_done=0, 
   berr = 0 /* bit errors per round */, 
   berr_per_pkt_max = 0, berr_per_byte_max = 0;
-  static uint32_t rx_ok_total = 0, rx_failed_total = 0, berr_total = 0;
+  static uint32_t rx_ok_total = 0, rx_failed_total = 0, berr_total = 0, present_in_event_round = 0, total_event_round = 0;
+
 
   #if PRINT_RSSI
   static int8_t rx_rssi[LOG_STATE_SIZE]={0};
@@ -592,9 +593,16 @@ PROCESS_THREAD(tx_process, ev, data)
         }
       }
     }
+    bool isInterestPkt = last_rx_pkt->uuid[0]!=last_rx_pkt->uuid[1];
+    if(!isInterestPkt){
+      total_event_round++;
+      if(do_tx){
+        present_in_event_round++;
+      }
+      PRINTF("flooding presentage: %f \n", present_in_event_round*100/total_event_round);
+    }
     if(initiator_node_index != my_index){    
       //PRINTF("recieved packet UUID: %x%x%x%x-%x%x-%x%x-%x%x-%x%x%x%x%x%x \n",last_rx_pkt->uuid[0],last_rx_pkt->uuid[1],last_rx_pkt->uuid[2],last_rx_pkt->uuid[3],last_rx_pkt->uuid[4],last_rx_pkt->uuid[5],last_rx_pkt->uuid[6],last_rx_pkt->uuid[7],last_rx_pkt->uuid[8],last_rx_pkt->uuid[9],last_rx_pkt->uuid[10],last_rx_pkt->uuid[11],last_rx_pkt->uuid[12],last_rx_pkt->uuid[13],last_rx_pkt->uuid[14],last_rx_pkt->uuid[15]);
-      bool isInterestPkt = last_rx_pkt->uuid[0]!=last_rx_pkt->uuid[1];
       if(last_rx_pkt->uuid[1]==my_index && isInterestPkt){
         childs[last_rx_pkt->uuid[0]] = 1;
         for(i=0; i<14; i++){
@@ -602,7 +610,7 @@ PROCESS_THREAD(tx_process, ev, data)
         }
       }
     }
-    PRINTF("node interests: %x-%x-%x-%x-%x-%x-%x-%x-%x-%x-%x-%x-%x-%x \n",interests[0],interests[1],interests[2],interests[3],interests[4],interests[5],interests[6],interests[7],interests[8],interests[9],interests[10],interests[11],interests[12],interests[13]);
+    //PRINTF("node interests: %x-%x-%x-%x-%x-%x-%x-%x-%x-%x-%x-%x-%x-%x \n",interests[0],interests[1],interests[2],interests[3],interests[4],interests[5],interests[6],interests[7],interests[8],interests[9],interests[10],interests[11],interests[12],interests[13]);
     /*for(i=0; i<TESTBED_SIZE; i++){
       PRINTF("%d",childs[i]);
     }
