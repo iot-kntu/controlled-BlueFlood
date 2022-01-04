@@ -603,7 +603,7 @@ PROCESS_THREAD(tx_process, ev, data)
       if(present_in_flooding){
         present_in_event_round++;
       }
-      PRINTF("flooding presentage: %f \n", present_in_event_round*100/total_event_round);
+      PRINTF("flooding presentage: %f \n", (present_in_event_round*100/total_event_round));
     }
     present_in_flooding = 0;
     if(initiator_node_index != my_index){    
