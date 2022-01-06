@@ -152,6 +152,25 @@ mote20,mote21,mote22,mote24\
 
 #define MY_ADV_ADDRESS_HI 0xA1A1U
 
+#ifndef NRF_LOG_BACKEND_RTT_ENABLED
+#define NRF_LOG_BACKEND_RTT_ENABLED 1
+#endif
+#ifndef NRF_LOG_BACKEND_UART_ENABLED
+#define NRF_LOG_BACKEND_UART_ENABLED 1
+#endif
+
+#ifndef NRF_LOG_BACKEND_UART_TX_PIN
+#define NRF_LOG_BACKEND_UART_TX_PIN 13
+#endif
+
+#ifndef NRF_LOG_ENABLED
+#define NRF_LOG_ENABLED 1
+#endif
+
+#ifndef NRF_LOG_BACKEND_UART_BAUDRATE
+#define NRF_LOG_BACKEND_UART_BAUDRATE 30801920
+#endif
+
 #define mote4  (0x7b150560UL)
 #define mote5  (0xddf8a17fUL)
 #define mote6  (0x8e28b37dUL)
