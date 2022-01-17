@@ -59,11 +59,11 @@ packet_size ?= 38 #packet size in bytes
 n_channels ?= 1 #how many channels to use. Up to 40.
 overrive_ch37 ?= 0 #use a special frequency for channel 37 to avoid Bluetooth traffic
 ntx ?= 4 #how many repititions
-initiator?=1 #initiator node ID
+initiator?=0 #initiator node ID
 test_mode_tx_carrier?=0 #do not tx/rx data, but transmit a constant unmodulated carrier (by keeping the radio in idle mode in slots instead of starting tx/rx)
 #unnecessary
 DURATION ?= 10 #duration of the experiment
-TESTBED_CONF?=HELLOWORLD_TESTBED #Default testbed 
+TESTBED_CONF?=WIRED_TESTBED #Default testbed 
 round_robin_initiator ?= 1 #switch initiator every round
 cpu_busywait ?= 0
 
